@@ -11,7 +11,7 @@ type Task {
 
 type Epic {
     id: ID!
-    name: String! @search(by: [term])
+    name: String! @id
     description: String
     tasks: [Task]! @hasInverse(field: epic)
     project: Project! @hasInverse(field: epics)
@@ -19,7 +19,7 @@ type Epic {
 
 type Project {
     id: ID!
-    name: String! @search(by: [term])
+    name: String! @id
     epics: [Epic]! @hasInverse(field: project)
 }
 
@@ -32,12 +32,13 @@ enum Status {
 
 type Tag {
     id: ID!
-    title: String! @search(by: [term])
+    title: String! @id
     color: String!
 }
 
 type User {
     id: ID!
+    email: String! @id
     firstName: String! @search(by: [term])
     lastName: String! @search(by: [term])
     avatarURL: String
