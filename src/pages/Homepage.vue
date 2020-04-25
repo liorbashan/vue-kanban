@@ -1,6 +1,5 @@
 <template>
     <div class="flex justify-center">
-        <button @click="print()" type="button">click</button>
         <div class="min-h-screen flex overflow-x-scroll py-12">
             <div
                 v-for="column in columns"

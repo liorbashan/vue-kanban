@@ -1,17 +1,29 @@
 <template>
-    <div id="app">
-        <Homepage/>
-        <router-view />
-    </div>
+    <v-app id="inspire">
+      <Header/>
+        <v-content>
+            <v-container class="fill-height" fluid>
+              <router-view />
+            </v-container>
+        </v-content>
+        <Footer/>
+    </v-app>
 </template>
 
 <script>
 import Homepage from './pages/Homepage';
+import Header from './components/Header';
+import Footer from './components/Footer';
 export default {
     name: 'App',
-    components: { Homepage },
+    components: { Header, Footer },
     data() {
-        return {};
+        return {
+            drawer: false,
+        };
+    },
+    created () {
+      this.$vuetify.theme.dark = true
     },
 };
 </script>
