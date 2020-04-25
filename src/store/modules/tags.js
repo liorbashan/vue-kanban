@@ -1,5 +1,5 @@
-import gql from 'graphql-tag';
 import apollo from '../../apolloClient';
+import getAllTagsQuery from '../../gql/tags.graphql';
 
 export default {
     namespaced: true,
@@ -13,17 +13,10 @@ export default {
     },
     actions: {
         async getAllTags({ commit }) {
+            console.log(getAllTagsQuery);
             const tags = await apollo
                 .query({
-                    query: gql`
-                        query getAllTags {
-                            queryTag {
-                                id
-                                title
-                                color
-                            }
-                        }
-                    `,
+                    query: getAllTagsQuery,
                 })
                 .catch((error) => {
                     console.log(error);

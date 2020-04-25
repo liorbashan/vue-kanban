@@ -1,0 +1,24 @@
+query getAllTags {
+    queryTag {
+        id
+        title
+        color
+    }
+}
+
+mutation addNewTag($newTags: [AddTagInput!]!) {
+    addTag(input: $newTags) {
+        tag {
+            id
+            title
+            color
+        }
+    }
+}
+
+mutation deleteTag($tagToDelete: TagFilter!) {
+    deleteTag(filter: $tagToDelete) {
+        msg
+        numUids
+    }
+}
