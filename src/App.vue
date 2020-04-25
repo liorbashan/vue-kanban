@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <button @click="print()" type="button">click</button>
         <div class="flex justify-center">
             <div class="min-h-screen flex overflow-x-scroll py-12">
                 <div
@@ -43,6 +44,7 @@ export default {
     },
     data() {
         return {
+            qaTag: {},
             columns: [
                 {
                     title: 'Backlog',
@@ -162,11 +164,12 @@ export default {
         };
     },
     created() {
-        // return this.$store.
+        this.$store.dispatch('tags/getAllTags');
     },
     methods: {
-        getTags: () => {
-            return this.$store.tags.actions.getTags;
+        print() {
+            this.qaTag = this.$store.getters['tags/getTag']('QA');
+            console.log(this.qaTag.title);
         },
     },
 };

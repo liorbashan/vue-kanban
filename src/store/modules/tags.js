@@ -1,4 +1,5 @@
-// import gql from 'graphql-tag';
+import gql from 'graphql-tag';
+import apollo from '../../apolloClient';
 
 export default {
     namespaced: true,
@@ -11,21 +12,33 @@ export default {
         },
     },
     actions: {
-        getAllTags({ commit }) {
-            const tags = this.apollo.getAllTags;
-            commit('addTags', tags);
+        async getAllTags({ commit }) {
+            const tags = await apollo
+                .query({
+                    query: gql`
+                        query getAllTags {
+                            queryTag {
+                                id
+                                title
+                                color
+                            }
+                        }
+                    `,
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            commit('addTags', tags.data.queryTag);
         },
     },
     getters: {
-        getTags(state) {
+        getTags: (state) => {
             return state.tags;
         },
+        getTag: (state) => (tagName) => {
+            return state.tags.find((item) => {
+                return item.title === tagName;
+            });
+        },
     },
-    // apollo: {
-    //     getAllTags: gql`queryTag {
-    //         id
-    //         title
-    //         color
-    //       }`,
-    // },
 };
