@@ -1,4 +1,4 @@
-query getAllTags {
+query getAllTagsQuery {
     queryTag {
         id
         title

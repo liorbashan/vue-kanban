@@ -1,5 +1,5 @@
 import apollo from '../../apolloClient';
-import getAllTagsQuery from '../../gql/tags.graphql';
+import tagGQL from '../../gql/tags.gql';
 
 export default {
     namespaced: true,
@@ -13,10 +13,9 @@ export default {
     },
     actions: {
         async getAllTags({ commit }) {
-            console.log(getAllTagsQuery);
             const tags = await apollo
                 .query({
-                    query: getAllTagsQuery,
+                    query: tagGQL.getAllTagsQuery,
                 })
                 .catch((error) => {
                     console.log(error);
