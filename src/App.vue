@@ -2,7 +2,7 @@
     <v-app id="inspire">
       <Header/>
         <v-content>
-            <v-container class="fill-height" fluid>
+            <v-container class="pa-0 white align-start" fill-height fluid>
               <router-view />
             </v-container>
         </v-content>

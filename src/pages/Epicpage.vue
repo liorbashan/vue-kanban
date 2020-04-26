@@ -1,5 +1,5 @@
 <template>
-    <v-container class="white pa-0" fill-height fluid>
+  <v-container class="white pa-0" fill-height fluid>
         <v-row class="px-12" justify="center" align="strech">
             <v-col class="blue-grey lighten-5 mx-1" v-for="column in columns" :key="column.title">
                 <p class="black--text">{{column.title}}</p>
@@ -28,7 +28,7 @@
 import draggable from 'vuedraggable';
 import TaskCard from '../components/TaskCard.vue';
 export default {
-    name: 'Homepage',
+    name: 'Epicpage',
     components: {
         TaskCard,
         draggable,
@@ -153,15 +153,6 @@ export default {
                 },
             ],
         };
-    },
-    created() {
-        this.$store.dispatch('tags/getAllTags');
-    },
-    methods: {
-        print() {
-            this.qaTag = this.$store.getters['tags/getTag']('QA');
-            console.log(this.qaTag.title);
-        },
     },
 };
 </script>

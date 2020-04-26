@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Homepage from '../pages/Homepage';
+import Tagspage from '../pages/Tagspage';
+import Epicpage from '../pages/Epicpage';
 
 Vue.use(Router);
 
@@ -12,6 +14,16 @@ export default new Router({
             components: {
                 default: Homepage,
             },
+        },
+        {
+            path: '/tags',
+            name: 'Tagspage',
+            component: Tagspage,
+        },
+        {
+            path: '/epic',
+            name: 'Epicpage',
+            component: Epicpage,
         },
     ],
 });

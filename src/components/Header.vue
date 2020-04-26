@@ -1,21 +1,25 @@
 <template>
     <div>
         <v-navigation-drawer v-model="drawer" temporary dark app clipped>
-            <v-list dense>
-                <v-list-item link>
+            <v-list>
+                <v-list-item>
                     <v-list-item-action>
-                        <v-icon>mdi-view-dashboard</v-icon>
+                        <v-icon>home</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
-                        <v-list-item-title>Tags</v-list-item-title>
+                        <v-list-item-title>
+                            <router-link class="white--text" to="/">Kanban</router-link>
+                        </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item link>
+                <v-list-item>
                     <v-list-item-action>
-                        <v-icon>mdi-settings</v-icon>
+                        <v-icon>local_offer</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
-                        <v-list-item-title>Projets</v-list-item-title>
+                        <v-list-item-title>
+                            <router-link class="white--text" to="/tags">Tags</router-link>
+                        </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
@@ -39,5 +43,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+a {
+    color: #fff;
+}
 </style>
