@@ -155,7 +155,6 @@ export default {
         };
     },
     created() {
-        this.$store.dispatch('tags/getAllTags');
     },
     methods: {
         print() {

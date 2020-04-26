@@ -1,12 +1,12 @@
 <template>
     <v-app id="inspire">
-      <Header/>
+        <Header />
         <v-content>
             <v-container class="pa-0 white align-start" fill-height fluid>
-              <router-view />
+                <router-view />
             </v-container>
         </v-content>
-        <Footer/>
+        <Footer />
     </v-app>
 </template>
 
@@ -22,11 +22,24 @@ export default {
             drawer: false,
         };
     },
-    created () {
-      this.$vuetify.theme.dark = true
+    created() {
+        this.$vuetify.theme.dark = true;
+        this.initData();
+    },
+    methods: {
+        initData: function() {
+            this.$store.dispatch('tags/getAllTags');
+        },
     },
 };
 </script>
 
-<style scoped>
+<style>
+body {
+    font-family: 'Baloo Tamma 2', cursive;
+}
+div#inspire{
+  font-family: 'Baloo Tamma 2', cursive;
+  color: #000;
+}
 </style>
