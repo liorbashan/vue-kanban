@@ -5,7 +5,7 @@
                 <h1 class="black--text">Tags</h1>
             </v-col>
             <v-col align="right" col="2">
-                <v-btn @click="formModal=true" color="secondary" depressed>
+                <v-btn @click="openCreateForm()" color="secondary" depressed>
                     add
                     <v-icon right dark>add_circle</v-icon>
                 </v-btn>
@@ -25,7 +25,28 @@
                                 <td>{{item.id}}</td>
                                 <td>{{item.title}}</td>
                                 <td>{{item.color}}</td>
-                                <td>EDIT</td>
+                                <td>
+                                    <v-btn
+                                        @click="editTag(item.title)"
+                                        fab
+                                        depressed
+                                        color="secondary"
+                                        small
+                                    >
+                                        <v-icon>edit</v-icon>
+                                    </v-btn>
+                                </td>
+                                <td>
+                                    <v-btn
+                                        @click="deleteTag(item.id)"
+                                        fab
+                                        depressed
+                                        color="secondary"
+                                        small
+                                    >
+                                        <v-icon>delete</v-icon>
+                                    </v-btn>
+                                </td>
                             </tr>
                         </tbody>
                     </template>
@@ -33,7 +54,7 @@
             </v-col>
         </v-row>
         <v-dialog v-model="formModal" persistent max-width="550">
-            <TagForm @clicked="formModal = false"></TagForm>
+            <TagForm v-if="formModal" :tag="tagToEdit" @closed="formModal = false"></TagForm>
         </v-dialog>
     </v-container>
 </template>
@@ -53,14 +74,29 @@ export default {
                 { text: 'Name', value: 'title' },
                 { text: 'Color (#)', value: 'color' },
                 { text: '', value: '' },
+                { text: '', value: '' },
             ],
             formModal: false,
+            tagToEdit: null,
         };
     },
-    created() {},
     computed: {
         tagsList: function() {
             return this.$store.getters['tags/getTags'];
+        },
+    },
+    methods: {
+        openCreateForm() {
+            this.tagToEdit = null;
+            this.formModal = true;
+        },
+        deleteTag: async function(tagId) {
+            const res = await this.$store.dispatch('tags/deleteTag', tagId);
+            this.$store.dispatch('tags/getAllTags');
+        },
+        editTag: async function(tagTitle) {
+            this.tagToEdit = await this.$store.getters['tags/getTag'](tagTitle);
+            this.formModal = true;
         },
     },
 };

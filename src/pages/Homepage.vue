@@ -1,6 +1,6 @@
 <template>
     <v-container class="white pa-0" fill-height fluid>
-        <v-row class="px-12" justify="center" align="strech">
+        <v-row class="px-12" justify="center" >
             <v-col class="blue-grey lighten-5 mx-1" v-for="column in columns" :key="column.title">
                 <p class="black--text">{{column.title}}</p>
                 <!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
