@@ -20,6 +20,12 @@ export default {
                 return item.id === tagId;
             });
         },
+        UPDATE_TAG: function(state, payload) {
+            let updatedTag = state.tags.find((x) => {
+                return x.id === payload.id;
+            });
+            updatedTag.color = payload.color;
+        },
     },
     actions: {
         async getAllTags({ commit }) {
@@ -68,6 +74,27 @@ export default {
                 });
             if (result) {
                 commit('DELETE_TAG', tagIdToDelete);
+            }
+            EventBus.$emit('HIDE_LOADER', 1);
+            return result;
+        },
+
+        async updateTag({ commit }, payload) {
+            EventBus.$emit('SHOW_LOADER', 1);
+            const result = await apollo
+                .mutate({
+                    mutation: tagGQL.updateTag,
+                    variables: {
+                        id: payload.id,
+                        color: payload.color,
+                    },
+                })
+                .catch((error) => {
+                    EventBus.$emit('HIDE_LOADER', 1);
+                    throw error;
+                });
+            if (result) {
+                commit('UPDATE_TAG', payload);
             }
             EventBus.$emit('HIDE_LOADER', 1);
             return result;

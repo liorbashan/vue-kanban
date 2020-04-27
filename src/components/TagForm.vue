@@ -13,6 +13,7 @@
                                 :rules="requiredRule"
                                 label="Name"
                                 required
+                                :disabled="isEditMode"
                             ></v-text-field>
 
                             <v-text-field
@@ -64,12 +65,22 @@ export default {
         },
         create: async function() {
             if (this.$refs.tagsForm.validate()) {
-                const newTag = [{ title: this.formInputName, color: this.formInputColor }];
-                const result = await this.$store.dispatch('tags/addNewTag', newTag).catch((error) => {
-                    EventBus.$emit('SHOW_ERROR', error);
-                });
-                if (result) {
-                    EventBus.$emit('SHOW_SUCCESS', `New Tag Created!`);
+                if (!this.isEditMode) {
+                    const newTag = [{ title: this.formInputName, color: this.formInputColor }];
+                    const result = await this.$store.dispatch('tags/addNewTag', newTag).catch((error) => {
+                        EventBus.$emit('SHOW_ERROR', error);
+                    });
+                    if (result) {
+                        EventBus.$emit('SHOW_SUCCESS', `New Tag Created!`);
+                    }
+                } else {
+                    const vars = { id: this.tag.id, color: this.formInputColor };
+                    const updateResult = await this.$store.dispatch('tags/updateTag', vars).catch((error) => {
+                        EventBus.$emit('SHOW_ERROR', error);
+                    });
+                    if (updateResult) {
+                        EventBus.$emit('SHOW_SUCCESS', `Tag Updated!`);
+                    }
                 }
                 this.close();
             }

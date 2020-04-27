@@ -22,3 +22,13 @@ mutation deleteTag($tagToDelete: TagFilter!) {
         numUids
     }
 }
+
+mutation updateTag($id: ID!, $color: String!) {
+    updateTag(input: { filter: { id: [$id] }, set: { color: $color } }) {
+        tag {
+            id
+            title
+            color
+        }
+    }
+}
