@@ -1,180 +1,135 @@
 <template>
-    <v-container class="white pa-0" fill-height fluid>
-        <v-row class="px-12" justify="center" >
-            <v-col class="blue-grey lighten-5 mx-1" v-for="column in columns" :key="column.title">
-                <p class="black--text">{{column.title}}</p>
-                <!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
-                <draggable
-                    :list="column.tasks"
-                    :animation="200"
-                    ghost-class="ghost-card"
-                    group="tasks"
-                >
-                    <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
-                    <task-card
-                        v-for="(task) in column.tasks"
-                        :key="task.id"
-                        :task="task"
-                        class="mt-3 cursor-move"
-                    ></task-card>
-                    <!-- </transition-group> -->
-                </draggable>
+    <v-container justify="center" class="white pa-2" fluid>
+        <v-row class="justify-center">
+            <v-col align="center" col="2">
+                <h1 class="black--text">Projects</h1>
+            </v-col>
+            <v-col align="center" col="2">
+                <v-btn @click="openCreateForm()" color="secondary" depressed>
+                    add
+                    <v-icon right dark>add_circle</v-icon>
+                </v-btn>
+                <!-- <v-btn @click="refreshList()" color="secondary" fab small depressed>
+                    <v-icon dark>refresh</v-icon>
+                </v-btn> -->
             </v-col>
         </v-row>
+        <v-row class="justify-center">
+            <v-col flex class="d-flex flex-wrap justify-center" xl="8">
+                <v-card
+                    class="projectCard"
+                    color="#e8fcff"
+                    v-for="(item, index) in projectsList"
+                    :key="index"
+                >
+                    <v-card-title class="headline">
+                        {{item.name}}
+                        <span class="caption ml-2">({{item.id}})</span>
+                    </v-card-title>
+                    <v-card-subtitle
+                        class="subtitle black--text font-weight-regular subtitle-1"
+                    >{{item.description}}</v-card-subtitle>
+                    <v-card-actions class="action d-flex justify-space-between">
+                        <v-btn color="secondary" depressed>View Epics</v-btn>
+                        <div class="btn-wrapper">
+                            <v-btn
+                                @click="editProject(item.id)"
+                                fab
+                                depressed
+                                outlined
+                                color="grey darken-4"
+                                small
+                            >
+                                <v-icon>edit</v-icon>
+                            </v-btn>
+                            <v-btn
+                                @click="deleteProject(item.id)"
+                                fab
+                                depressed
+                                outlined
+                                color="grey darken-4"
+                                small
+                            >
+                                <v-icon>delete</v-icon>
+                            </v-btn>
+                        </div>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-dialog v-model="formModal" persistent max-width="550">
+            <ProjectForm v-if="formModal" :project="projToEdit" @closed="formModal = false"></ProjectForm>
+        </v-dialog>
     </v-container>
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import TaskCard from '../components/TaskCard.vue';
+import ProjectForm from '../components/ProjectForm.vue';
+import { EventBus } from '../eventBus';
 export default {
     name: 'Homepage',
-    components: {
-        TaskCard,
-        draggable,
-    },
+    components: { ProjectForm },
     data() {
         return {
-            qaTag: {},
-            columns: [
-                {
-                    title: 'Backlog',
-                    tasks: [
-                        {
-                            id: 1,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                        {
-                            id: 2,
-                            title: 'Provide documentation on integrations',
-                            date: 'Sep 12',
-                        },
-                        {
-                            id: 3,
-                            title: 'Design shopping cart dropdown',
-                            date: 'Sep 9',
-                            type: 'Design',
-                        },
-                        {
-                            id: 4,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                        {
-                            id: 5,
-                            title: 'Test checkout flow',
-                            date: 'Sep 15',
-                            type: 'QA',
-                        },
-                    ],
-                },
-                {
-                    title: 'In Progress',
-                    tasks: [
-                        {
-                            id: 6,
-                            title: 'Design shopping cart dropdown',
-                            date: 'Sep 9',
-                            type: 'Design',
-                        },
-                        {
-                            id: 7,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                        {
-                            id: 8,
-                            title: 'Provide documentation on integrations',
-                            date: 'Sep 12',
-                            type: 'Backend',
-                        },
-                    ],
-                },
-                {
-                    title: 'Review',
-                    tasks: [
-                        {
-                            id: 9,
-                            title: 'Provide documentation on integrations',
-                            date: 'Sep 12',
-                        },
-                        {
-                            id: 10,
-                            title: 'Design shopping cart dropdown',
-                            date: 'Sep 9',
-                            type: 'Design',
-                        },
-                        {
-                            id: 11,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                        {
-                            id: 12,
-                            title: 'Design shopping cart dropdown',
-                            date: 'Sep 9',
-                            type: 'Design',
-                        },
-                        {
-                            id: 13,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                    ],
-                },
-                {
-                    title: 'Done',
-                    tasks: [
-                        {
-                            id: 14,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                        {
-                            id: 15,
-                            title: 'Design shopping cart dropdown',
-                            date: 'Sep 9',
-                            type: 'Design',
-                        },
-                        {
-                            id: 16,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                    ],
-                },
-            ],
+            formModal: false,
+            projToEdit: null,
         };
     },
-    created() {
+    created() {},
+    computed: {
+        projectsList: function() {
+            return this.$store.getters['projects/GET_ALL_PROJECTS'];
+        },
     },
     methods: {
-        print() {
-            this.qaTag = this.$store.getters['tags/getTag']('QA');
-            console.log(this.qaTag.title);
+        refreshList(){
+            this.$store.dispatch('projects/FETCH_ALL_PROJECTS');
+        },
+        openCreateForm() {
+            this.projToEdit = null;
+            this.formModal = true;
+        },
+        async editProject(id) {
+            this.projToEdit = await this.$store.getters['projects/GET_PROJECT_BY_ID'](id);
+            this.formModal = true;
+        },
+        async deleteProject(id) {
+            const proj = this.$store.getters['projects/GET_PROJECT_BY_ID'](id);
+            if (!proj) {
+                EventBus.$emit('SHOW_ERROR', 'The project you are trying to delete seem to be missing, please try to refresh page to get the update projects list');
+            } else {
+                await EventBus.$emit('SHOW_CONFIRM', `Are you sure you wish to delete project ${proj.name}?`, 'projects/DELETE_PROJECT', id, 'projects/FETCH_ALL_PROJECTS');
+            }
         },
     },
 };
 </script>
 
 <style lang="scss" scoped>
-.column-width {
-    min-width: 320px;
-    width: 320px;
-}
-/* Unfortunately @apply cannot be setup in codesandbox, 
-but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
-.ghost-card {
-    opacity: 0.5;
-    background: #f7fafc;
-    border: 1px solid #4299e1;
+.projectCard {
+    border: 1px solid #989898 !important;
+    width: 100%;
+    max-width: 350px;
+    margin: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    &:hover {
+        background: rgb(255, 254, 213) !important;
+    }
+    .headline {
+        text-transform: capitalize;
+    }
+    .headline,
+    .subtitle,
+    .action {
+        font-family: inherit !important;
+    }
+    .btn-wrapper {
+        display: flex;
+        flex-direction: row;
+        width: 33%;
+        justify-content: space-between;
+    }
 }
 </style>

@@ -101,6 +101,7 @@ export default {
     methods: {
         initData: function() {
             this.$store.dispatch('tags/getAllTags');
+            this.$store.dispatch('projects/FETCH_ALL_PROJECTS');
         },
         initEventHandlers: function() {
             EventBus.$on('SHOW_ERROR', (payload) => {
@@ -168,5 +169,8 @@ div#inspire {
 #confirmTitle {
     font-family: 'Baloo Tamma 2', cursive !important;
     color: #fff !important;
+}
+a{
+    text-decoration: none;
 }
 </style>

@@ -68,10 +68,7 @@ export default {
     data() {
         return {
             headers: [
-                {
-                    text: 'ID',
-                    value: 'id',
-                },
+                { text: 'ID', value: 'id' },
                 { text: 'Name', value: 'title' },
                 { text: 'Color (#)', value: 'color' },
                 { text: '', value: '' },

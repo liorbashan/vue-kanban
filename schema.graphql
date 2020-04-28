@@ -13,14 +13,15 @@ type Epic {
     id: ID!
     name: String! @id
     description: String
-    tasks: [Task]! @hasInverse(field: epic)
+    tasks: [Task] @hasInverse(field: epic)
     project: Project! @hasInverse(field: epics)
 }
 
 type Project {
     id: ID!
     name: String! @id
-    epics: [Epic]! @hasInverse(field: project)
+    description: String
+    epics: [Epic] @hasInverse(field: project)
 }
 
 enum Status {

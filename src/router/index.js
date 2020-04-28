@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Homepage from '../pages/Homepage';
 import Tagspage from '../pages/Tagspage';
 import Epicpage from '../pages/Epicpage';
+import Projectpage from '../pages/Projectpage';
 
 Vue.use(Router);
 
@@ -24,6 +25,11 @@ export default new Router({
             path: '/epic',
             name: 'Epicpage',
             component: Epicpage,
+        },
+        {
+            path: '/project',
+            name: 'Projectpage',
+            component: Projectpage,
         },
     ],
 });
