@@ -2,7 +2,7 @@
     <v-container justify="center" class="white pa-2" fluid>
         <v-row class="justify-center">
             <v-col align="center" col="2">
-                <h1 class="black--text">Projects</h1>
+                <h1 class="black--text">Upper Funnel Projects:</h1>
             </v-col>
             <v-col align="center" col="2">
                 <v-btn @click="openCreateForm()" color="secondary" depressed>

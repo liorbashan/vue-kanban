@@ -1,0 +1,19 @@
+mutation createNewEpic($name: String!, $desc: String, $project: ProjectRef!) {
+    addEpic(input: [{ name: $name, description: $desc, project: $project, tasks: [] }]) {
+        numUids
+    }
+}
+
+query getProjectEpics($projId: ID!) {
+    queryProject(filter: { id: [$projId] }) {
+        epics {
+            id
+            name
+            description
+            tasks {
+                id
+                title
+            }
+        }
+    }
+}
