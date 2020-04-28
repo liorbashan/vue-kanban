@@ -1,17 +1,17 @@
 <template>
-    <v-container class="white pa-2" fluid>
-        <v-row align="center" justify="space-between">
-            <v-col col="2">
+    <v-container justify="center" class="white pa-2" fluid>
+        <v-row align="center" justify="space-between" class="justify-center">
+            <v-col align="center" col="2">
                 <h1 class="black--text">Tags</h1>
             </v-col>
-            <v-col align="right" col="2">
+            <v-col align="center" col="2">
                 <v-btn @click="openCreateForm()" color="secondary" depressed>
                     add
                     <v-icon right dark>add_circle</v-icon>
                 </v-btn>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row class="justify-center">
             <v-col md="8" col="12">
                 <v-data-table
                     :headers="headers"
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { EventBus } from '@/eventBus';
 import TagForm from '../components/TagForm';
 export default {
     name: 'Tagpage',
@@ -91,8 +92,7 @@ export default {
             this.formModal = true;
         },
         deleteTag: async function(tagId) {
-            const res = await this.$store.dispatch('tags/deleteTag', tagId);
-            this.$store.dispatch('tags/getAllTags');
+            await EventBus.$emit('SHOW_CONFIRM', `Do you approve delete tag id ${tagId}`, 'tags/deleteTag', tagId, 'tags/getAllTags');
         },
         editTag: async function(tagTitle) {
             this.tagToEdit = await this.$store.getters['tags/getTag'](tagTitle);

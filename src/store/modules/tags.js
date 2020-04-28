@@ -9,10 +9,10 @@ export default {
         tags: [],
     },
     mutations: {
-        SET_TAGS(state, tags) {
+        SET_TAGS: function(state, tags) {
             state.tags = tags;
         },
-        ADD_NEW_TAG(state, newTags) {
+        ADD_NEW_TAG: function(state, newTags) {
             state.tags = [...state.tags, ...newTags];
         },
         DELETE_TAG: function(state, tagId) {

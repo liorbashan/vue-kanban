@@ -1,13 +1,34 @@
 <template>
     <v-app id="inspire">
+        <!-- HEADER START -->
         <Header />
+        <!-- HEADER END -->
         <v-content>
             <v-container class="pa-0 white align-start" fill-height fluid>
                 <router-view />
             </v-container>
         </v-content>
+        <!-- FOOTER START -->
         <Footer />
+        <!-- FOOTER END -->
         <!-- Globals: -->
+        <v-dialog v-model="confirm.show" persistent width="500">
+            <v-card>
+                <v-card-title
+                    id="confirmTitle"
+                    class="headline blue lighten-2"
+                    primary-title
+                >Confirmation Required!</v-card-title>
+                <v-card-text class="my-8">
+                    <h3>{{confirm.message}}</h3>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions class="justify-sm-space-between">
+                    <v-btn @click="approveConfirmationRequest()" color="green darken-1" depressed>Yes</v-btn>
+                    <v-btn @click="denyConfirmationRequest()" color="red lighten-1" depressed>No</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-dialog v-model="error.show" persistent width="500">
             <v-card>
                 <v-card-title class="headline red lighten-2" primary-title>Error!</v-card-title>
@@ -59,6 +80,13 @@ export default {
                 show: false,
                 message: '',
             },
+            confirm: {
+                show: false,
+                message: '',
+                confirmActionName: null,
+                confirmActionPayload: null,
+                confirmationPostAction: null,
+            },
             loader: {
                 counter: 0,
                 show: false,
@@ -83,6 +111,13 @@ export default {
                 this.success.message = payload;
                 this.success.show = true;
             });
+            EventBus.$on('SHOW_CONFIRM', (message, confirmAction, actionPayload, postAction) => {
+                this.confirm.message = message;
+                this.confirm.confirmActionName = confirmAction;
+                this.confirm.confirmActionPayload = actionPayload;
+                this.confirm.confirmationPostAction = postAction;
+                this.confirm.show = true;
+            });
             EventBus.$on('SHOW_LOADER', (payload) => {
                 if (payload) {
                     this.loader.counter += payload;
@@ -102,6 +137,21 @@ export default {
                 }
             });
         },
+        approveConfirmationRequest: async function() {
+            await this.$store.dispatch(this.confirm.confirmActionName, this.confirm.confirmActionPayload);
+            await this.$store.dispatch(this.confirm.confirmationPostAction);
+            this.resetConfirmation();
+        },
+        denyConfirmationRequest: function() {
+            this.resetConfirmation();
+        },
+        resetConfirmation() {
+            this.confirm.message = null;
+            this.confirm.confirmActionName = null;
+            this.confirm.confirmActionPayload = null;
+            this.confirm.confirmationPostAction = null;
+            this.confirm.show = false;
+        },
     },
 };
 </script>
@@ -110,8 +160,13 @@ export default {
 body {
     font-family: 'Baloo Tamma 2', cursive;
 }
+.v-application .headline,
 div#inspire {
     font-family: 'Baloo Tamma 2', cursive;
     color: #000;
+}
+#confirmTitle {
+    font-family: 'Baloo Tamma 2', cursive !important;
+    color: #fff !important;
 }
 </style>
