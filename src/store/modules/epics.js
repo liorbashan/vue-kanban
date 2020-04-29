@@ -24,7 +24,7 @@ export default {
             let updatedEpic = state.epics.find((x) => {
                 return x.id === payload.id;
             });
-            updatedEpic = payload;
+            updatedEpic.description = payload.description;
         },
     },
     actions: {
