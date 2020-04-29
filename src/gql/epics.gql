@@ -1,18 +1,46 @@
-mutation createNewEpic($name: String!, $desc: String, $project: ProjectRef!) {
-    addEpic(input: [{ name: $name, description: $desc, project: $project, tasks: [] }]) {
+mutation createNewEpic($name: String!, $desc: String, $projectId: ID!) {
+    addEpic(input: [{ name: $name, description: $desc, project: { id: $projectId }, tasks: [] }]) {
         numUids
+        epic {
+            id
+            name
+            description
+            project {
+                id
+            }
+        }
     }
 }
 
-query getProjectEpics($projId: ID!) {
-    queryProject(filter: { id: [$projId] }) {
+query getProjectEpics($projectId: ID!) {
+    queryProject(filter: { id: [$projectId] }) {
         epics {
             id
             name
             description
-            tasks {
+            project {
                 id
-                title
+            }
+        }
+    }
+}
+
+mutation deleteEpicById($idToDelete: ID!) {
+    deleteEpic(filter: { id: [$idToDelete] }) {
+        numUids
+        msg
+    }
+}
+
+mutation editEpic($epicId: ID!, $desc: String) {
+    updateEpic(input: { filter: { id: [$epicId] }, set: { description: $desc } }) {
+        numUids
+        epic {
+            id
+            name
+            description
+            project {
+                id
             }
         }
     }

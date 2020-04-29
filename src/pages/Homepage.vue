@@ -11,7 +11,7 @@
                 </v-btn>
                 <!-- <v-btn @click="refreshList()" color="secondary" fab small depressed>
                     <v-icon dark>refresh</v-icon>
-                </v-btn> -->
+                </v-btn>-->
             </v-col>
         </v-row>
         <v-row class="justify-center">
@@ -30,7 +30,9 @@
                         class="subtitle black--text font-weight-regular subtitle-1"
                     >{{item.description}}</v-card-subtitle>
                     <v-card-actions class="action d-flex justify-space-between">
-                        <v-btn color="secondary" depressed>View Epics</v-btn>
+                        <router-link :to="{name:'Projectpage',params:{id:item.id}}">
+                            <v-btn color="secondary" depressed>View Epics</v-btn>
+                        </router-link>
                         <div class="btn-wrapper">
                             <v-btn
                                 @click="editProject(item.id)"
@@ -82,7 +84,7 @@ export default {
         },
     },
     methods: {
-        refreshList(){
+        refreshList() {
             this.$store.dispatch('projects/FETCH_ALL_PROJECTS');
         },
         openCreateForm() {

@@ -37,6 +37,7 @@ export default {
                     console.log(error);
                 });
             commit('SET_PROJECTS', project.data.queryProject);
+            return project.data.queryProject;
         },
         ADD_NEW_PROJECT: async function({ commit }, payload) {
             EventBus.$emit('SHOW_LOADER', 1);
