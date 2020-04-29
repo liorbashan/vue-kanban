@@ -2,7 +2,11 @@
     <v-container justify="center" class="white pa-2" fluid>
         <v-row class="header-wrapper justify-center ma-auto">
             <v-col align="left" col="2">
-                <h1 class="black--text">{{name}}</h1>
+                <h1 class="black--text">
+                    Project:
+                    <span class="primary--text display-1">{{name}}</span>
+                    <span class="caption">({{id}})</span>
+                </h1>
                 <h3>Amount of Epics: {{numOfEpics}}</h3>
             </v-col>
             <v-col align="right" col="2">
@@ -14,7 +18,7 @@
         </v-row>
         <v-divider light></v-divider>
         <v-row class="justify-center">
-            <v-col flex class="d-flex flex-wrap justify-center" xl="8">
+            <v-col v-if="epicsList" flex class="d-flex flex-wrap justify-center" xl="8">
                 <v-card
                     class="epicCard"
                     color="#e8fcff"
@@ -44,7 +48,7 @@
                                 <v-icon>edit</v-icon>
                             </v-btn>
                             <v-btn
-                                @click="deleteEpic(item.id)"
+                                @click="confirmDeletion(item.id)"
                                 fab
                                 depressed
                                 outlined
@@ -61,21 +65,32 @@
         <v-dialog v-model="formModal" persistent max-width="550">
             <EpicForm v-if="formModal" :projectId="id" :epic="epicToEdit" @closed="closeForm()"></EpicForm>
         </v-dialog>
+        <ConfirmBox
+            :message="confirmBox.message"
+            v-if="confirmBox.show"
+            @close="getConfirmBoxValue"
+        ></ConfirmBox>
     </v-container>
 </template>
 
 <script>
 import EpicForm from '../components/EpicForm';
 import { EventBus } from '../eventBus';
+import ConfirmBox from '../components/ConfirmBox';
 export default {
     name: 'Projectpage',
-    components: { EpicForm },
+    components: { EpicForm, ConfirmBox },
     props: ['id', 'name'],
     data() {
         return {
-            epicsList: null,
+            epicsList: [],
             formModal: false,
             epicToEdit: null,
+            confirmBox: {
+                show: false,
+                message: null,
+                payload: null,
+            },
         };
     },
     created() {
@@ -83,13 +98,13 @@ export default {
     },
     computed: {
         numOfEpics() {
-            return this.epicsList ? this.epicsList.length : 0;
+            return this.epicsList.length ? this.epicsList.length : 0;
         },
     },
     methods: {
         async closeForm() {
             this.formModal = false;
-            await this.refreshList();
+            this.getProjectEpics();
         },
         async getProjectEpics() {
             this.epicsList = await this.$store.dispatch('epics/FETCH_ALL_EPICS', this.id);
@@ -105,14 +120,29 @@ export default {
             this.epicToEdit = await this.$store.getters['epics/GET_EPIC_BY_ID'](id);
             this.formModal = true;
         },
-        async deleteEpic(id) {
-            // TODO: Confirm box should be inside thie component to remove deleted epics from list. (check async computed?)
+        confirmDeletion(id) {
             const epic = this.$store.getters['epics/GET_EPIC_BY_ID'](id);
             if (!epic) {
                 EventBus.$emit('SHOW_ERROR', 'The epic you are trying to delete seem to be missing, please try to refresh page to get the update epics list');
             } else {
-                await EventBus.$emit('SHOW_CONFIRM', `Are you sure you wish to delete epic ${epic.name}?`, 'epics/DELETE_EPIC', id);
+                this.confirmBox.message = `Are you sure you wish to delete epic ${epic.name}?`;
+                this.confirmBox.payload = id;
+                this.confirmBox.show = true;
             }
+        },
+        async getConfirmBoxValue(confirmed) {
+            this.confirmBox.show = false;
+            if (confirmed) {
+                await this.deleteEpic(this.confirmBox.payload);
+            }
+            this.resetConfirmBox();
+        },
+        async deleteEpic(id) {
+            await this.$store.dispatch('epics/DELETE_EPIC', [id]);
+        },
+        resetConfirmBox() {
+            this.confirmBox.message = null;
+            this.confirmBox.payload = null;
         },
     },
 };
@@ -121,6 +151,14 @@ export default {
 <style lang="scss" scoped>
 .header-wrapper {
     max-width: 1050px;
+    .display-1,
+    .display-2,
+    .caption,
+    .title,
+    .subtitle-1,
+    .subtitle-2 {
+        font-family: 'Baloo Tamma 2', cursive !important;
+    }
 }
 .epicCard {
     border: 1px solid #989898 !important;

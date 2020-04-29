@@ -23,7 +23,7 @@
                     </v-list-item-icon>
                     <v-list-item-content>
                         <router-link class="white--text" :to="item.link">
-                            <v-list-item-title v-text="item.text"></v-list-item-title>
+                            <v-btn class="white--text" depressed color="transparent" tile>{{item.text}}</v-btn>
                         </router-link>
                     </v-list-item-content>
                 </v-list-item>
@@ -32,6 +32,9 @@
 
         <v-app-bar dense app clipped-left>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+            <router-link class="white--text" to="/">
+                <v-btn depressed fab text><v-icon>home</v-icon></v-btn>
+            </router-link>
             <v-toolbar-title>Upper Funnel Kanban</v-toolbar-title>
         </v-app-bar>
     </div>

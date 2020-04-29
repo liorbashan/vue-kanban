@@ -32,6 +32,7 @@ export default {
             const tags = await apollo
                 .query({
                     query: tagGQL.getAllTagsQuery,
+                    fetchPolicy: 'no-cache',
                 })
                 .catch((error) => {
                     console.log(error);

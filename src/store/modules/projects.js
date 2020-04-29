@@ -1,6 +1,7 @@
 import apollo from '../../apolloClient';
 import projectGQL from '../../gql/projects.gql';
 import { EventBus } from '@/eventBus';
+import store from '../index';
 const _ = require('lodash');
 
 export default {
@@ -32,6 +33,7 @@ export default {
             const project = await apollo
                 .query({
                     query: projectGQL.getAllProjects,
+                    fetchPolicy: 'no-cache',
                 })
                 .catch((error) => {
                     console.log(error);
@@ -61,6 +63,28 @@ export default {
         },
         DELETE_PROJECT: async function({ commit }, idToDelete) {
             EventBus.$emit('SHOW_LOADER', 1);
+            // 1. Get Project Epics
+            const epics = await store.dispatch('epics/FETCH_ALL_EPICS', idToDelete).catch((error) => {
+                console.log(error);
+                return false;
+            });
+            if (!epics || epics.length === 0) {
+                return false;
+            }
+            const epicIds = [];
+            epics.filter((item) => {
+                epicIds.push(item.id);
+            });
+
+            // 2. Delete Project Epics
+            const epicDeletionResult = await store.dispatch('epics/DELETE_EPIC', epicIds).catch((error) => {
+                console.log(error);
+                return false;
+            });
+            if (!epicDeletionResult) {
+                return false;
+            }
+            // 3. Delete Project
             const result = await apollo
                 .mutate({
                     mutation: projectGQL.deleteProject,
@@ -72,6 +96,7 @@ export default {
                     EventBus.$emit('HIDE_LOADER', 1);
                     throw error;
                 });
+
             if (result) {
                 commit('DELETE_PROJECT', idToDelete);
             }

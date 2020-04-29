@@ -2,7 +2,8 @@
     <v-container justify="center" class="white pa-2" fluid>
         <v-row class="header-wrapper justify-center ma-auto">
             <v-col align="left" col="2">
-                <h1 class="black--text">Upper Funnel Projects:{{numOfProjects}}</h1>
+                <h1 class="black--text">Upper Funnel Projects:</h1>
+                <h3>Amount of Projects: {{numOfProjects}}</h3>
             </v-col>
             <v-col align="right" col="2">
                 <v-btn @click="openCreateForm()" color="secondary" depressed>
@@ -46,7 +47,7 @@
                                 <v-icon>edit</v-icon>
                             </v-btn>
                             <v-btn
-                                @click="deleteProject(item.id)"
+                                @click="confirmDeletion(item.id)"
                                 fab
                                 depressed
                                 outlined
@@ -63,20 +64,31 @@
         <v-dialog v-model="formModal" persistent max-width="550">
             <ProjectForm v-if="formModal" :project="projToEdit" @closed="formModal = false"></ProjectForm>
         </v-dialog>
+        <ConfirmBox
+            :message="confirmBox.message"
+            v-if="confirmBox.show"
+            @close="getConfirmBoxValue"
+        ></ConfirmBox>
     </v-container>
 </template>
 
 <script>
 import ProjectForm from '../components/ProjectForm.vue';
+import ConfirmBox from '../components/ConfirmBox';
 import { EventBus } from '../eventBus';
 import { mapGetters } from 'vuex';
 export default {
     name: 'Homepage',
-    components: { ProjectForm },
+    components: { ProjectForm, ConfirmBox },
     data() {
         return {
             formModal: false,
             projToEdit: null,
+            confirmBox: {
+                show: false,
+                message: null,
+                payload: null,
+            },
         };
     },
     created() {},
@@ -95,13 +107,32 @@ export default {
             this.projToEdit = await this.$store.getters['projects/GET_PROJECT_BY_ID'](id);
             this.formModal = true;
         },
-        async deleteProject(id) {
+        async getConfirmBoxValue(confirmed) {
+            this.confirmBox.show = false;
+            if (confirmed) {
+                await this.deleteProject(this.confirmBox.payload);
+            }
+            this.resetConfirmBox();
+        },
+        confirmDeletion(id) {
             const proj = this.$store.getters['projects/GET_PROJECT_BY_ID'](id);
             if (!proj) {
                 EventBus.$emit('SHOW_ERROR', 'The project you are trying to delete seem to be missing, please try to refresh page to get the update projects list');
             } else {
-                await EventBus.$emit('SHOW_CONFIRM', `Are you sure you wish to delete project ${proj.name}?`, 'projects/DELETE_PROJECT', id);
+                this.confirmBox.message = `Are you sure you wish to delete project ${proj.name}?`;
+                this.confirmBox.payload = id;
+                this.confirmBox.show = true;
             }
+        },
+        async deleteProject(id) {
+            const res = await this.$store.dispatch('projects/DELETE_PROJECT', id);
+            if (res) {
+                EventBus.$emit('SHOW_SUCCESS', `Project Deleted!`);
+            }
+        },
+        resetConfirmBox() {
+            this.confirmBox.message = null;
+            this.confirmBox.payload = null;
         },
     },
 };

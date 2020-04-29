@@ -10,15 +10,15 @@ export default {
     },
     mutations: {
         SET_EPICS: function(state, epics) {
+            state.epics = [];
             state.epics = epics;
         },
         ADD_NEW_EPIC: function(state, newEpic) {
             state.epics = [...state.epics, ...newEpic];
-            console.log(state.epics);
         },
-        DELETE_EPIC: function(state, epicId) {
+        DELETE_EPIC: function(state, epicArr) {
             _.remove(state.epics, (item) => {
-                return item.id === epicId;
+                return epicArr.includes(item.id);
             });
         },
         UPDATE_EPIC: function(state, payload) {
@@ -30,23 +30,27 @@ export default {
     },
     actions: {
         FETCH_ALL_EPICS: async function({ commit }, projectId) {
+            let data = null;
             const result = await apollo
                 .query({
                     query: epicGQL.getProjectEpics,
                     variables: {
                         projectId,
                     },
+                    fetchPolicy: 'no-cache',
                 })
                 .catch((error) => {
                     console.log(error);
                 });
             if (result) {
-                commit('SET_EPICS', result.data.queryProject[0].epics);
+                data = result.data.queryProject[0].epics;
+                commit('SET_EPICS', data);
             }
-            return result.data.queryProject[0].epics;
+            return data;
         },
         ADD_NEW_EPIC: async function({ commit }, payload) {
             EventBus.$emit('SHOW_LOADER', 1);
+            let data = null;
             const result = await apollo
                 .mutate({
                     mutation: epicGQL.createNewEpic,
@@ -61,18 +65,19 @@ export default {
                     throw error;
                 });
             if (result) {
-                commit('ADD_NEW_EPIC', result.data.addEpic.epic);
+                data = result.data.addEpic.epic;
+                commit('ADD_NEW_EPIC', data);
             }
             EventBus.$emit('HIDE_LOADER', 1);
-            return result;
+            return data;
         },
-        DELETE_EPIC: async function({ commit }, idToDelete) {
+        DELETE_EPIC: async function({ commit }, idArr) {
             EventBus.$emit('SHOW_LOADER', 1);
             const result = await apollo
                 .mutate({
                     mutation: epicGQL.deleteEpicById,
                     variables: {
-                        idToDelete,
+                        idArr,
                     },
                 })
                 .catch((error) => {
@@ -80,13 +85,14 @@ export default {
                     throw error;
                 });
             if (result) {
-                commit('DELETE_EPIC', idToDelete);
+                commit('DELETE_EPIC', idArr);
             }
             EventBus.$emit('HIDE_LOADER', 1);
             return result;
         },
         UPDATE_EPIC: async function({ commit }, payload) {
             EventBus.$emit('SHOW_LOADER', 1);
+            let data = null;
             const result = await apollo
                 .mutate({
                     mutation: epicGQL.editEpic,
@@ -100,10 +106,11 @@ export default {
                     throw error;
                 });
             if (result) {
-                commit('UPDATE_EPIC', result.data.updateEpic.epic[0]);
+                data = result.data.updateEpic.epic[0];
+                commit('UPDATE_EPIC', data);
             }
             EventBus.$emit('HIDE_LOADER', 1);
-            return result;
+            return data;
         },
     },
     getters: {
@@ -116,6 +123,9 @@ export default {
             return state.epics.find((item) => {
                 return item.id === id;
             });
+        },
+        GET_NUM_OF_EPICS: (state) => {
+            return state.epics.length;
         },
     },
 };

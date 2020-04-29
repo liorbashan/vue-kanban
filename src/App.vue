@@ -12,27 +12,6 @@
         <Footer />
         <!-- FOOTER END -->
         <!-- Globals: -->
-        <v-dialog v-model="confirm.show" persistent width="500">
-            <v-card>
-                <v-card-title
-                    id="confirmTitle"
-                    class="headline blue lighten-2"
-                    primary-title
-                >Confirmation Required!</v-card-title>
-                <v-card-text class="my-8">
-                    <h3>{{confirm.message}}</h3>
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions class="justify-sm-space-between">
-                    <v-btn
-                        @click="approveConfirmationRequest()"
-                        color="green darken-1"
-                        depressed
-                    >Yes</v-btn>
-                    <v-btn @click="denyConfirmationRequest()" color="red lighten-1" depressed>No</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
         <v-dialog v-model="error.show" persistent width="500">
             <v-card>
                 <v-card-title class="headline red lighten-2" primary-title>Error!</v-card-title>
@@ -84,14 +63,6 @@ export default {
                 show: false,
                 message: '',
             },
-            confirm: {
-                show: false,
-                message: '',
-                confirmActionName: null,
-                confirmActionPayload: null,
-                confirmationPostAction: null,
-                confirmationPostActionPayload: null,
-            },
             loader: {
                 counter: 0,
                 show: false,
@@ -117,14 +88,6 @@ export default {
                 this.success.message = payload;
                 this.success.show = true;
             });
-            EventBus.$on('SHOW_CONFIRM', (message, confirmAction, actionPayload, postAction = null, postActionPayload = null) => {
-                this.confirm.message = message;
-                this.confirm.confirmActionName = confirmAction;
-                this.confirm.confirmActionPayload = actionPayload;
-                this.confirm.confirmationPostAction = postAction;
-                this.confirm.confirmationPostActionPayload = postActionPayload;
-                this.confirm.show = true;
-            });
             EventBus.$on('SHOW_LOADER', (payload) => {
                 if (payload) {
                     this.loader.counter += payload;
@@ -143,24 +106,6 @@ export default {
                     this.loader.show = false;
                 }
             });
-        },
-        approveConfirmationRequest: async function() {
-            await this.$store.dispatch(this.confirm.confirmActionName, this.confirm.confirmActionPayload);
-            if (this.confirm.confirmationPostAction) {
-                await this.$store.dispatch(this.confirm.confirmationPostAction, this.confirm.confirmationPostActionPayload);
-            }
-            this.resetConfirmation();
-        },
-        denyConfirmationRequest: function() {
-            this.resetConfirmation();
-        },
-        resetConfirmation() {
-            this.confirm.message = null;
-            this.confirm.confirmActionName = null;
-            this.confirm.confirmActionPayload = null;
-            this.confirm.confirmationPostAction = null;
-            this.confirm.confirmationPostActionPayload = null;
-            this.confirm.show = false;
         },
     },
 };
