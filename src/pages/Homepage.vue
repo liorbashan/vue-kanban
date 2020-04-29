@@ -30,7 +30,7 @@
                         class="subtitle black--text font-weight-regular subtitle-1"
                     >{{item.description}}</v-card-subtitle>
                     <v-card-actions class="action d-flex justify-space-between">
-                        <router-link :to="{name:'Projectpage',params:{id:item.id}}">
+                        <router-link :to="{name:'Projectpage',params:{id:item.id, name:item.name}}">
                             <v-btn color="secondary" depressed>View Epics</v-btn>
                         </router-link>
                         <div class="btn-wrapper">
