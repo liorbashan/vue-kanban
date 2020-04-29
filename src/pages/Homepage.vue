@@ -1,10 +1,10 @@
 <template>
     <v-container justify="center" class="white pa-2" fluid>
-        <v-row class="justify-center">
-            <v-col align="center" col="2">
+        <v-row class="header-wrapper justify-center ma-auto">
+            <v-col align="left" col="2">
                 <h1 class="black--text">Upper Funnel Projects:</h1>
             </v-col>
-            <v-col align="center" col="2">
+            <v-col align="right" col="2">
                 <v-btn @click="openCreateForm()" color="secondary" depressed>
                     add
                     <v-icon right dark>add_circle</v-icon>
@@ -14,6 +14,7 @@
                 </v-btn>-->
             </v-col>
         </v-row>
+        <v-divider light></v-divider>
         <v-row class="justify-center">
             <v-col flex class="d-flex flex-wrap justify-center" xl="8">
                 <v-card
@@ -108,6 +109,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.header-wrapper{
+    max-width: 1050px;
+    // border-bottom: 1px solid #e1e1e1;
+}
 .projectCard {
     border: 1px solid #989898 !important;
     width: 100%;

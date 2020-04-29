@@ -107,8 +107,8 @@ export default {
     },
     getters: {
         GET_ALL_PROJECT_EPICS: (state) => (id) => {
-            return state.epics.find((x) => {
-                x.project.id === id;
+            return state.epics.filter((x) => {
+                return x.project.id === id;
             });
         },
         GET_EPIC_BY_ID: (state) => (id) => {
