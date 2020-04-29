@@ -2,7 +2,7 @@
     <v-container justify="center" class="white pa-2" fluid>
         <v-row class="header-wrapper justify-center ma-auto">
             <v-col align="left" col="2">
-                <h1 class="black--text">Upper Funnel Projects:</h1>
+                <h1 class="black--text">Upper Funnel Projects:{{numOfProjects}}</h1>
             </v-col>
             <v-col align="right" col="2">
                 <v-btn @click="openCreateForm()" color="secondary" depressed>
@@ -16,7 +16,7 @@
         </v-row>
         <v-divider light></v-divider>
         <v-row class="justify-center">
-            <v-col flex class="d-flex flex-wrap justify-center" xl="8">
+            <v-col v-if="projectsList" flex class="d-flex flex-wrap justify-center" xl="8">
                 <v-card
                     class="projectCard"
                     color="#e8fcff"
@@ -69,6 +69,7 @@
 <script>
 import ProjectForm from '../components/ProjectForm.vue';
 import { EventBus } from '../eventBus';
+import { mapGetters } from 'vuex';
 export default {
     name: 'Homepage',
     components: { ProjectForm },
@@ -80,14 +81,12 @@ export default {
     },
     created() {},
     computed: {
-        projectsList: function() {
-            return this.$store.getters['projects/GET_ALL_PROJECTS'];
-        },
+        ...mapGetters({
+            projectsList: ['projects/GET_ALL_PROJECTS'],
+            numOfProjects: ['projects/GET_PROJECT_COUNT'],
+        }),
     },
     methods: {
-        refreshList() {
-            this.$store.dispatch('projects/FETCH_ALL_PROJECTS');
-        },
         openCreateForm() {
             this.projToEdit = null;
             this.formModal = true;
@@ -101,7 +100,7 @@ export default {
             if (!proj) {
                 EventBus.$emit('SHOW_ERROR', 'The project you are trying to delete seem to be missing, please try to refresh page to get the update projects list');
             } else {
-                await EventBus.$emit('SHOW_CONFIRM', `Are you sure you wish to delete project ${proj.name}?`, 'projects/DELETE_PROJECT', id, 'projects/FETCH_ALL_PROJECTS');
+                await EventBus.$emit('SHOW_CONFIRM', `Are you sure you wish to delete project ${proj.name}?`, 'projects/DELETE_PROJECT', id);
             }
         },
     },
@@ -109,7 +108,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.header-wrapper{
+.header-wrapper {
     max-width: 1050px;
     // border-bottom: 1px solid #e1e1e1;
 }

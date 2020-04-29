@@ -108,5 +108,8 @@ export default {
                 return item.id === id;
             });
         },
+        GET_PROJECT_COUNT: (state) => {
+            return state.projects.length;
+        },
     },
 };
