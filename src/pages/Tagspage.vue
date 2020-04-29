@@ -79,7 +79,7 @@ export default {
         };
     },
     computed: {
-        tagsList: function() {
+        tagsList() {
             return this.$store.getters['tags/getTags'];
         },
     },
@@ -89,7 +89,8 @@ export default {
             this.formModal = true;
         },
         deleteTag: async function(tagId) {
-            await EventBus.$emit('SHOW_CONFIRM', `Do you approve delete tag id ${tagId}`, 'tags/deleteTag', tagId, 'tags/getAllTags');
+            await this.$store.dispatch('tags/deleteTag', tagId);
+            await this.$store.dispatch('tags/getAllTags');
         },
         editTag: async function(tagTitle) {
             this.tagToEdit = await this.$store.getters['tags/getTag'](tagTitle);

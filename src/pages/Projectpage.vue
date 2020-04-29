@@ -104,7 +104,7 @@ export default {
     methods: {
         async closeForm() {
             this.formModal = false;
-            this.getProjectEpics();
+            this.refreshList();
         },
         async getProjectEpics() {
             this.epicsList = await this.$store.dispatch('epics/FETCH_ALL_EPICS', this.id);
