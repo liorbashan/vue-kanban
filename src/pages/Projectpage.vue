@@ -3,7 +3,7 @@
         <v-row class="header-wrapper justify-center ma-auto">
             <v-col align="left" col="2">
                 <h1 class="black--text">{{name}}</h1>
-                <h3>Epics:</h3>
+                <h3>Amount of Epics: {{numOfEpics}}</h3>
             </v-col>
             <v-col align="right" col="2">
                 <v-btn @click="openCreateModal()" color="secondary" depressed>
@@ -66,6 +66,7 @@
 
 <script>
 import EpicForm from '../components/EpicForm';
+import { EventBus } from '../eventBus';
 export default {
     name: 'Projectpage',
     components: { EpicForm },
@@ -80,12 +81,21 @@ export default {
     created() {
         this.getProjectEpics();
     },
+    computed: {
+        numOfEpics() {
+            return this.epicsList ? this.epicsList.length : 0;
+        },
+    },
     methods: {
         async closeForm() {
             this.formModal = false;
+            await this.refreshList();
         },
         async getProjectEpics() {
             this.epicsList = await this.$store.dispatch('epics/FETCH_ALL_EPICS', this.id);
+        },
+        async refreshList() {
+            this.epicsList = await this.$store.getters['epics/GET_ALL_PROJECT_EPICS'](this.id);
         },
         async openCreateModal() {
             this.epicToEdit = null;
@@ -95,7 +105,15 @@ export default {
             this.epicToEdit = await this.$store.getters['epics/GET_EPIC_BY_ID'](id);
             this.formModal = true;
         },
-        async deleteEpic(id) {},
+        async deleteEpic(id) {
+            // TODO: Confirm box should be inside thie component to remove deleted epics from list. (check async computed?)
+            const epic = this.$store.getters['epics/GET_EPIC_BY_ID'](id);
+            if (!epic) {
+                EventBus.$emit('SHOW_ERROR', 'The epic you are trying to delete seem to be missing, please try to refresh page to get the update epics list');
+            } else {
+                await EventBus.$emit('SHOW_CONFIRM', `Are you sure you wish to delete epic ${epic.name}?`, 'epics/DELETE_EPIC', id);
+            }
+        },
     },
 };
 </script>

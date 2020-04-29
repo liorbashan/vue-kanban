@@ -27,7 +27,7 @@ module.exports = {
         semi: 0,
         'space-before-function-paren': 0,
         indent: 0,
-        'function-paren-newline': ['error', { minItems: 6 }],
+        'function-paren-newline': ['error', 'never'],
         'no-undef': 0,
     },
 };

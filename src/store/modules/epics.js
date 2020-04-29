@@ -14,6 +14,7 @@ export default {
         },
         ADD_NEW_EPIC: function(state, newEpic) {
             state.epics = [...state.epics, ...newEpic];
+            console.log(state.epics);
         },
         DELETE_EPIC: function(state, epicId) {
             _.remove(state.epics, (item) => {
