@@ -22,11 +22,6 @@ export default new Router({
             component: Tagspage,
         },
         {
-            path: '/epic',
-            name: 'Epicpage',
-            component: Epicpage,
-        },
-        {
             path: '/project/:id/:name',
             name: 'Projectpage',
             component: Projectpage,
