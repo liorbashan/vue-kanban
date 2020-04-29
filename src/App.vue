@@ -147,7 +147,7 @@ export default {
         approveConfirmationRequest: async function() {
             await this.$store.dispatch(this.confirm.confirmActionName, this.confirm.confirmActionPayload);
             if (this.confirm.confirmationPostAction) {
-                await this.$store.getters[this.confirm.confirmationPostAction](this.confirm.confirmationPostActionPayload);
+                await this.$store.dispatch(this.confirm.confirmationPostAction, this.confirm.confirmationPostActionPayload);
             }
             this.resetConfirmation();
         },
