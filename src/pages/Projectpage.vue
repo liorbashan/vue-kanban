@@ -82,7 +82,6 @@ export default {
     },
     methods: {
         async closeForm() {
-            this.epicsList = await this.$store.getters['epics/GET_ALL_PROJECT_EPICS'](this.id);
             this.formModal = false;
         },
         async getProjectEpics() {
