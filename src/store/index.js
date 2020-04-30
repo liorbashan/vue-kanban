@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import usersModule from './modules/users';
+import tasks from './modules/tasks';
 import tags from './modules/tags';
 import projects from './modules/projects';
 import epics from './modules/epics';
@@ -12,5 +12,6 @@ export default new Vuex.Store({
         tags,
         projects,
         epics,
+        tasks,
     },
 });

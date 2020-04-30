@@ -2,6 +2,11 @@
     <v-container justify="center" class="white pa-2" fluid>
         <v-row class="header-wrapper justify-center ma-auto">
             <v-col align="left" col="2">
+                <v-btn @click="$router.back()" color="secondary" depressed>
+                    <v-icon left dark>arrow_back_ios</v-icon>back
+                </v-btn>
+            </v-col>
+            <v-col align="center" col="4">
                 <h1 class="black--text">
                     Project:
                     <span class="primary--text display-1">{{name}}</span>
@@ -33,7 +38,7 @@
                         class="subtitle black--text font-weight-regular subtitle-1"
                     >{{item.description}}</v-card-subtitle>
                     <v-card-actions class="action d-flex justify-space-between">
-                        <router-link :to="{name:'Projectpage',params:{id:item.id, name:item.name}}">
+                        <router-link :to="{name:'Epicpage',params:{id:item.id}}">
                             <v-btn color="secondary" depressed>View Board</v-btn>
                         </router-link>
                         <div class="btn-wrapper">
@@ -184,6 +189,13 @@ export default {
         flex-direction: row;
         width: 33%;
         justify-content: space-between;
+    }
+}
+.v-btn {
+    &:hover {
+        .v-icon--left {
+            width: 28px;
+        }
     }
 }
 </style>

@@ -28,7 +28,7 @@ export default new Router({
             props: true,
         },
         {
-            path: '/epic',
+            path: '/epic/:id',
             name: 'Epicpage',
             component: Epicpage,
             props: true,

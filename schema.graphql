@@ -1,6 +1,6 @@
 type Task {
     id: ID!
-    title: String! @search(by: [term])
+    title: String! @id
     description: String
     tags: Tag!
     createdDate: DateTime! @search

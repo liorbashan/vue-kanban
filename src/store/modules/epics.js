@@ -72,6 +72,7 @@ export default {
             return data;
         },
         DELETE_EPIC: async function({ commit }, idArr) {
+            // TODO: delete all related tasks
             EventBus.$emit('SHOW_LOADER', 1);
             const result = await apollo
                 .mutate({

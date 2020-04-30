@@ -1,26 +1,26 @@
 <template>
-  <v-container class="white pa-0" fill-height fluid>
-        <v-row class="px-12" justify="center" align="strech">
-            <v-col class="blue-grey lighten-5 mx-1" v-for="column in columns" :key="column.title">
-                <p class="black--text">{{column.title}}</p>
-                <!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
-                <draggable
-                    :list="column.tasks"
-                    :animation="200"
-                    ghost-class="ghost-card"
-                    group="tasks"
-                >
-                    <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
-                    <task-card
-                        v-for="(task) in column.tasks"
-                        :key="task.id"
-                        :task="task"
-                        class="mt-3 cursor-move"
-                    ></task-card>
-                    <!-- </transition-group> -->
-                </draggable>
+    <v-container justify="center" class="white pa-2" fluid>
+        <v-row class="header-wrapper justify-center ma-auto">
+            <v-col align="left" col="2">
+                <v-btn @click="$router.back()" color="secondary" depressed>
+                    <v-icon left dark>arrow_back_ios</v-icon>back
+                </v-btn>
+            </v-col>
+            <v-col align="center" col="4">
+                <h1 class="black--text">
+                    Board:
+                    <span class="primary--text display-1">{{name}}</span>
+                    <span class="caption">({{id}})</span>
+                </h1>
+            </v-col>
+            <v-col align="right" col="2">
+                <v-btn @click="openCreateModal()" color="secondary" depressed>
+                    add
+                    <v-icon right dark>add_circle</v-icon>
+                </v-btn>
             </v-col>
         </v-row>
+        <v-divider light></v-divider>
     </v-container>
 </template>
 
@@ -29,10 +29,11 @@ import draggable from 'vuedraggable';
 import TaskCard from '../components/TaskCard.vue';
 export default {
     name: 'Epicpage',
-    components: {
-        TaskCard,
-        draggable,
-    },
+    props: ['id'],
+    // components: {
+    //     TaskCard,
+    //     draggable,
+    // },
     data() {
         return {
             qaTag: {},
@@ -154,6 +155,15 @@ export default {
             ],
         };
     },
+    created() {
+        console.log(this.id);
+    },
+    computed:{
+
+    },
+    methods:{
+        
+    }
 };
 </script>
 
