@@ -21,153 +21,83 @@
             </v-col>
         </v-row>
         <v-divider light></v-divider>
-        <v-row v-if="tasksList" class="justify-center align-strech">
-            <div color="#e8fcff" v-for="(item, index) in tasksList" :key="index">
-                <span>{{item.id}}</span>
-            </div>
+        <v-row v-if="tasksList" class="justify-center align-strech mt-3">
+            <v-col class="lane" v-for="lane in board" :key="lane.title">
+                <p class="lane-title">{{lane.title}}</p>
+                <!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
+                <draggable
+                    :list="lane.tasks"
+                    :animation="200"
+                    ghost-class="ghost-card"
+                    group="tasks"
+                >
+                    <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
+                    <TaskCard
+                        v-for="(task) in lane.tasks"
+                        :key="task.id"
+                        :task="task"
+                        class="mt-3 cursor-move"
+                    ></TaskCard>
+                    <!-- </transition-group> -->
+                </draggable>
+            </v-col>
         </v-row>
     </v-container>
 </template>
 
 <script>
 import draggable from 'vuedraggable';
-import TaskCard from '../components/TaskCard.vue';
+import TaskCard from '../components/TaskCard';
 import store from '../store';
 export default {
     name: 'Epicpage',
     props: ['id', 'name'],
-    // components: {
-    //     TaskCard,
-    //     draggable,
-    // },
+    components: {
+        TaskCard,
+        draggable,
+    },
     data() {
-        return {
-            qaTag: {},
-            columns: [
-                {
-                    title: 'Backlog',
-                    tasks: [
-                        {
-                            id: 1,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                        {
-                            id: 2,
-                            title: 'Provide documentation on integrations',
-                            date: 'Sep 12',
-                        },
-                        {
-                            id: 3,
-                            title: 'Design shopping cart dropdown',
-                            date: 'Sep 9',
-                            type: 'Design',
-                        },
-                        {
-                            id: 4,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                        {
-                            id: 5,
-                            title: 'Test checkout flow',
-                            date: 'Sep 15',
-                            type: 'QA',
-                        },
-                    ],
-                },
-                {
-                    title: 'In Progress',
-                    tasks: [
-                        {
-                            id: 6,
-                            title: 'Design shopping cart dropdown',
-                            date: 'Sep 9',
-                            type: 'Design',
-                        },
-                        {
-                            id: 7,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                        {
-                            id: 8,
-                            title: 'Provide documentation on integrations',
-                            date: 'Sep 12',
-                            type: 'Backend',
-                        },
-                    ],
-                },
-                {
-                    title: 'Review',
-                    tasks: [
-                        {
-                            id: 9,
-                            title: 'Provide documentation on integrations',
-                            date: 'Sep 12',
-                        },
-                        {
-                            id: 10,
-                            title: 'Design shopping cart dropdown',
-                            date: 'Sep 9',
-                            type: 'Design',
-                        },
-                        {
-                            id: 11,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                        {
-                            id: 12,
-                            title: 'Design shopping cart dropdown',
-                            date: 'Sep 9',
-                            type: 'Design',
-                        },
-                        {
-                            id: 13,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                    ],
-                },
-                {
-                    title: 'Done',
-                    tasks: [
-                        {
-                            id: 14,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                        {
-                            id: 15,
-                            title: 'Design shopping cart dropdown',
-                            date: 'Sep 9',
-                            type: 'Design',
-                        },
-                        {
-                            id: 16,
-                            title: 'Add discount code to checkout page',
-                            date: 'Sep 14',
-                            type: 'Feature Request',
-                        },
-                    ],
-                },
-            ],
-        };
+        return {};
     },
     async created() {
         await this.$store.dispatch('tasks/LIST_ALL_EPIC_TASKS', this.id);
     },
     computed: {
+        board() {
+            return [
+                { title: 'Backlog', tasks: this.backlog },
+                { title: 'In Progress', tasks: this.inProgress },
+                { title: 'Review', tasks: this.review },
+                { title: 'Done', tasks: this.done },
+            ];
+        },
         tasksList() {
             const list = store.getters['tasks/GET_EPIC_TASKS'](this.id);
             return list ? list : [];
+        },
+        backlog() {
+            const retVal = this.tasksList.filter((item) => {
+                return item.status === 'Backlog';
+            });
+            return retVal;
+        },
+        inProgress() {
+            const retVal = this.tasksList.filter((item) => {
+                return item.status === 'InProgress';
+            });
+            return retVal;
+        },
+        review() {
+            const retVal = this.tasksList.filter((item) => {
+                return item.status === 'Review';
+            });
+            return retVal;
+        },
+        done() {
+            const retVal = this.tasksList.filter((item) => {
+                return item.status === 'Done';
+            });
+            return retVal;
         },
     },
     methods: {},
@@ -185,5 +115,20 @@ but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
     opacity: 0.5;
     background: #f7fafc;
     border: 1px solid #4299e1;
+}
+.lane {
+    background-color: #f7fafc;
+    min-width: 320px;
+    width: 320px;
+    padding: .75rem;
+    border-radius: .5rem;
+    margin: 0 4px;
+    max-width: 400px;
+    .lane-title{
+        color: #4e4444;
+        font-weight: 800;
+        font-size: 24px;
+
+    }
 }
 </style>

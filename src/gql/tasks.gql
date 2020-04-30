@@ -6,6 +6,8 @@ mutation createNewTask($taskTitle: String!, $taskDesc: String, $tagId: ID, $epic
             description
             tags {
                 id
+                title
+                color
             }
             createdDate
             status
@@ -27,6 +29,8 @@ query getEpicTasks($epicId: ID!) {
             description
             tags {
                 id
+                title
+                color
             }
             createdDate
             status

@@ -31,6 +31,7 @@ export default {
     actions: {
         LIST_ALL_EPIC_TASKS: async function({ commit }, epicId) {
             let data = [];
+            EventBus.$emit('SHOW_LOADER', 1);
             const result = await apollo
                 .query({
                     query: taskGQL.getEpicTasks,
@@ -46,7 +47,7 @@ export default {
                 data = result.data.queryEpic[0].tasks;
                 commit('SET_TASKS', data);
             }
-            console.log('FROM SERVER: ', data);
+            EventBus.$emit('HIDE_LOADER', 1);
             return data;
         },
     },
