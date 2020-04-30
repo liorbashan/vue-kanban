@@ -26,7 +26,7 @@
                 <p class="lane-title">{{lane.title}}</p>
                 <!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
                 <draggable
-                    :list="lane.tasks"
+                    :v-model="lane.tasks"
                     :animation="200"
                     ghost-class="ghost-card"
                     group="tasks"
@@ -117,7 +117,7 @@ but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
     border: 1px solid #4299e1;
 }
 .lane {
-    background-color: #f7fafc;
+    background-color: #e6f5ff;
     min-width: 320px;
     width: 320px;
     padding: .75rem;
