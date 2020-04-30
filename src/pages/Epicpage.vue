@@ -21,15 +21,21 @@
             </v-col>
         </v-row>
         <v-divider light></v-divider>
+        <v-row v-if="tasksList" class="justify-center align-strech">
+            <div color="#e8fcff" v-for="(item, index) in tasksList" :key="index">
+                <span>{{item.id}}</span>
+            </div>
+        </v-row>
     </v-container>
 </template>
 
 <script>
 import draggable from 'vuedraggable';
 import TaskCard from '../components/TaskCard.vue';
+import store from '../store';
 export default {
     name: 'Epicpage',
-    props: ['id'],
+    props: ['id', 'name'],
     // components: {
     //     TaskCard,
     //     draggable,
@@ -155,15 +161,16 @@ export default {
             ],
         };
     },
-    created() {
-        console.log(this.id);
+    async created() {
+        await this.$store.dispatch('tasks/LIST_ALL_EPIC_TASKS', this.id);
     },
-    computed:{
-
+    computed: {
+        tasksList() {
+            const list = store.getters['tasks/GET_EPIC_TASKS'](this.id);
+            return list ? list : [];
+        },
     },
-    methods:{
-        
-    }
+    methods: {},
 };
 </script>
 

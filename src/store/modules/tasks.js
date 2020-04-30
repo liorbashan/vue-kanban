@@ -10,8 +10,8 @@ export default {
         tasks: [],
     },
     mutations: {
-        SET_TASKS: function(state, tasks) {
-            this.state.tasks = tasks;
+        SET_TASKS: (state, tasks) => {
+            state.tasks = tasks;
         },
         ADD_NEW_TASK: function(state, newTask) {
             state.tasks = [...state.tasks, ...newTask];
@@ -28,8 +28,33 @@ export default {
             // updatedTask.xx = payload.xx;
         },
     },
-    // actions: {
-    //     LIST_ALL_EPIC_TASKS: async function(epicid)
-    // },
-    getters: {},
+    actions: {
+        LIST_ALL_EPIC_TASKS: async function({ commit }, epicId) {
+            let data = [];
+            const result = await apollo
+                .query({
+                    query: taskGQL.getEpicTasks,
+                    variables: {
+                        epicId,
+                    },
+                    fetchPolicy: 'no-cache',
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            if (result) {
+                data = result.data.queryEpic[0].tasks;
+                commit('SET_TASKS', data);
+            }
+            console.log('FROM SERVER: ', data);
+            return data;
+        },
+    },
+    getters: {
+        GET_EPIC_TASKS: (state) => (epicId) => {
+            return state.tasks.filter((item) => {
+                return item.epic.id === epicId;
+            });
+        },
+    },
 };
