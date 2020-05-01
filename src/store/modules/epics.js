@@ -9,7 +9,7 @@ export default {
         epics: [],
     },
     mutations: {
-        SET_EPICS: function(state, epics) {
+        SET_EPICS: (state, epics) => {
             state.epics = [];
             state.epics = epics;
         },

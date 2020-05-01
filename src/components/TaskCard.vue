@@ -115,7 +115,7 @@ export default {
                 });
                 if (deleteResult) {
                     await this.$store.dispatch('tasks/LIST_ALL_EPIC_TASKS', this.task.epic.id);
-                    EventBus.$emit('SHOW_SUCCESS', 'Task Deleted!');
+                    // EventBus.$emit('SHOW_SUCCESS', 'Task Deleted!');
                 }
             }
             this.confirmBox.message = null;

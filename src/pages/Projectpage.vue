@@ -82,13 +82,14 @@
 import EpicForm from '../components/EpicForm';
 import { EventBus } from '../eventBus';
 import ConfirmBox from '../components/ConfirmBox';
+import store from '../store';
 export default {
     name: 'Projectpage',
     components: { EpicForm, ConfirmBox },
     props: ['id', 'name'],
     data() {
         return {
-            epicsList: [],
+            // epicsList: [],
             formModal: false,
             epicToEdit: null,
             confirmBox: {
@@ -99,9 +100,14 @@ export default {
         };
     },
     async created() {
-        this.getProjectEpics();
+        await this.$store.dispatch('epics/FETCH_ALL_EPICS', this.id);
     },
     computed: {
+        epicsList() {
+            // return store.getters['tasks/GET_ALL_PROJECT_EPICS'](this.id);
+            const list = store.getters['epics/GET_ALL_PROJECT_EPICS'](this.id);
+            return list ? list : [];
+        },
         numOfEpics() {
             return this.epicsList.length ? this.epicsList.length : 0;
         },
@@ -109,13 +115,6 @@ export default {
     methods: {
         async closeForm() {
             this.formModal = false;
-            this.refreshList();
-        },
-        async getProjectEpics() {
-            this.epicsList = await this.$store.dispatch('epics/FETCH_ALL_EPICS', this.id);
-        },
-        async refreshList() {
-            this.epicsList = await this.$store.getters['epics/GET_ALL_PROJECT_EPICS'](this.id);
         },
         async openCreateModal() {
             this.epicToEdit = null;
@@ -138,13 +137,21 @@ export default {
         async getConfirmBoxValue(confirmed) {
             this.confirmBox.show = false;
             if (confirmed) {
-                await this.deleteEpic(this.confirmBox.payload);
+                const deleteResult = await this.deleteEpic(this.confirmBox.payload);
+                if (deleteResult) {
+                    await this.$store.dispatch('epics/FETCH_ALL_EPICS', this.id).catch((error) => {
+                        console.log(error);
+                    });
+                }
             }
             this.confirmBox.message = null;
             this.confirmBox.payload = null;
         },
         async deleteEpic(id) {
-            await this.$store.dispatch('epics/DELETE_EPIC', [id]);
+            const deleteResult = await this.$store.dispatch('epics/DELETE_EPIC', [id]).catch((error) => {
+                throw error;
+            });
+            return deleteResult ? true : false;
         },
     },
 };

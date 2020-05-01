@@ -100,7 +100,7 @@ export default {
                         EventBus.$emit('SHOW_ERROR', error);
                     });
                     if (task) {
-                        EventBus.$emit('SHOW_SUCCESS', 'New Task Added');
+                        // EventBus.$emit('SHOW_SUCCESS', 'New Task Added');
                     }
                 } else {
                     // TODO: edit task
