@@ -75,9 +75,9 @@ export default {
         this.initEventHandlers();
     },
     methods: {
-        initData: function() {
-            this.$store.dispatch('tags/getAllTags');
-            this.$store.dispatch('projects/FETCH_ALL_PROJECTS');
+        async initData() {
+            await this.$store.dispatch('tags/getAllTags');
+            await this.$store.dispatch('projects/FETCH_ALL_PROJECTS');
         },
         initEventHandlers: function() {
             EventBus.$on('SHOW_ERROR', (payload) => {

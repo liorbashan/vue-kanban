@@ -125,7 +125,9 @@ export default {
             }
         },
         async deleteProject(id) {
-            const res = await this.$store.dispatch('projects/DELETE_PROJECT', id);
+            const res = await this.$store.dispatch('projects/DELETE_PROJECT', id).catch((error) => {
+                console.log(error);
+            });
             if (res) {
                 EventBus.$emit('SHOW_SUCCESS', `Project Deleted!`);
             }

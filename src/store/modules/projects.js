@@ -68,21 +68,16 @@ export default {
                 console.log(error);
                 return false;
             });
-            if (!epics || epics.length === 0) {
-                return false;
-            }
-            const epicIds = [];
-            epics.filter((item) => {
-                epicIds.push(item.id);
-            });
-
-            // 2. Delete Project Epics
-            const epicDeletionResult = await store.dispatch('epics/DELETE_EPIC', epicIds).catch((error) => {
-                console.log(error);
-                return false;
-            });
-            if (!epicDeletionResult) {
-                return false;
+            // 2. If exists - Delete Project Epics
+            if (epics || epics.length === 0) {
+                const epicIds = [];
+                epics.filter((item) => {
+                    epicIds.push(item.id);
+                });
+                await store.dispatch('epics/DELETE_EPIC', epicIds).catch((error) => {
+                    console.log(error);
+                    throw error;
+                });
             }
             // 3. Delete Project
             const result = await apollo
