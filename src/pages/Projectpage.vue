@@ -98,7 +98,7 @@ export default {
             },
         };
     },
-    created() {
+    async created() {
         this.getProjectEpics();
     },
     computed: {

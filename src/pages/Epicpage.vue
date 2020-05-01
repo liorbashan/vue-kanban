@@ -14,11 +14,15 @@
                 </h1>
             </v-col>
             <v-col align="right" col="2">
-                <v-btn @click="openCreateModal()" color="secondary" depressed>
+                <v-btn @click="formModal=true" color="secondary" depressed>
                     add
                     <v-icon right dark>add_circle</v-icon>
                 </v-btn>
             </v-col>
+            <!-- TASK FORM MODAL -->
+            <v-dialog v-model="formModal" persistent max-width="550">
+                <TaskForm v-if="formModal" :epicId="id" :task="null" @closed="formModal = false"></TaskForm>
+            </v-dialog>
         </v-row>
         <v-divider light></v-divider>
         <v-row v-if="tasksList" class="justify-center align-strech mt-3">
@@ -50,6 +54,7 @@
 <script>
 import draggable from 'vuedraggable';
 import TaskCard from '../components/TaskCard';
+import TaskForm from '../components/TaskForm';
 import store from '../store';
 export default {
     name: 'Epicpage',
@@ -57,9 +62,12 @@ export default {
     components: {
         TaskCard,
         draggable,
+        TaskForm,
     },
     data() {
-        return {};
+        return {
+            formModal: false,
+        };
     },
     async created() {
         await this.$store.dispatch('tasks/LIST_ALL_EPIC_TASKS', this.id);
@@ -119,10 +127,9 @@ export default {
             // console.log('dropped', element);
         },
         draggableAdded(element) {
-            // const newStatus = element.to.parentElement.id.replace(/\s/g, '');
             const payload = {
                 taskId: element.item.id,
-                newStatus: element.to.parentElement.id.replace(/\s/g, ''),
+                newStatus: element.to.parentElement.id.replace(/\s/g, ''), // Remove white space in status name (In Progress)
             };
             this.updateTaskStatus(payload);
         },

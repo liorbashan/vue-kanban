@@ -50,6 +50,31 @@ export default {
             EventBus.$emit('HIDE_LOADER', 1);
             return data;
         },
+        ADD_NEW_TASK: async ({ commit }, payload) => {
+            let data = null;
+            EventBus.$emit('SHOW_LOADER', 1);
+            const result = await apollo
+                .mutate({
+                    mutation: taskGQL.createNewTask,
+                    variables: {
+                        taskTitle: payload.taskTitle,
+                        taskDesc: payload.taskDesc,
+                        tagId: payload.tagId,
+                        epicId: payload.epicId,
+                        time: new Date(),
+                        user: payload.user,
+                    },
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            if (result) {
+                data = result.data.addTask.task;
+                commit('ADD_NEW_TASK', data);
+            }
+            EventBus.$emit('HIDE_LOADER', 1);
+            return data;
+        },
         UPDATE_TASK_STATUS: async ({ commit }, payload) => {
             let data = null;
             EventBus.$emit('SHOW_LOADER', 1);
@@ -72,6 +97,28 @@ export default {
             }
             EventBus.$emit('HIDE_LOADER', 1);
             return result;
+        },
+        DELETE_TASKS: async ({ commit }, idToDeleteArr) => {
+            let data = null;
+            EventBus.$emit('SHOW_LOADER', 1);
+            const result = await apollo
+                .mutate({
+                    mutation: taskGQL.deleteTasksById,
+                    variables: {
+                        idToDeleteArr,
+                    },
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            if (result) {
+                data = result.data.deleteTask;
+                if (data.numUids === idToDeleteArr.length) {
+                    commit('DELETE_TASK', idToDeleteArr);
+                }
+            }
+            EventBus.$emit('HIDE_LOADER', 1);
+            return data;
         },
     },
     getters: {

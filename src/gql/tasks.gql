@@ -1,22 +1,7 @@
-mutation createNewTask($taskTitle: String!, $taskDesc: String, $tagId: ID, $epicId: ID, $time: DateTime!) {
-    addTask(input: [{ title: $taskTitle, description: $taskDesc, tags: { id: $tagId }, status: Backlog, epic: { id: $epicId }, createdDate: $time }]) {
+mutation createNewTask($taskTitle: String!, $taskDesc: String, $tagId: ID, $epicId: ID, $time: DateTime!, $user: UserRef) {
+    addTask(input: [{ title: $taskTitle, description: $taskDesc, tags: { id: $tagId }, status: Backlog, epic: { id: $epicId }, createdDate: $time, user: $user }]) {
         task {
-            id
-            title
-            description
-            tags {
-                id
-                title
-                color
-            }
-            createdDate
-            status
-            epic {
-                id
-            }
-            user {
-                id
-            }
+            ...taskResult
         }
     }
 }
@@ -24,27 +9,12 @@ mutation createNewTask($taskTitle: String!, $taskDesc: String, $tagId: ID, $epic
 query getEpicTasks($epicId: ID!) {
     queryEpic(filter: { id: [$epicId] }) {
         tasks {
-            id
-            title
-            description
-            tags {
-                id
-                title
-                color
-            }
-            createdDate
-            status
-            epic {
-                id
-            }
-            user {
-                id
-            }
+            ...taskResult
         }
     }
 }
 
-mutation deleteTaskById($idToDeleteArr: [ID!]) {
+mutation deleteTasksById($idToDeleteArr: [ID!]) {
     deleteTask(filter: { id: $idToDeleteArr }) {
         numUids
         msg
@@ -58,5 +28,36 @@ mutation changeTaskStatus($status: Status!, $taskId: ID!) {
             id
             status
         }
+    }
+}
+
+mutation editTask($taskId: ID!, $taskTitle: String!, $taskDesc: String, $tagId: ID, $userId: ID) {
+    updateTask(input: { filter: { id: [$taskId] }, set: { title: $taskTitle, description: $taskDesc, tags: { id: $tagId }, user: { id: $userId } } }) {
+        numUids
+        task {
+            ...taskResult
+        }
+    }
+}
+
+fragment taskResult on Task {
+    id
+    title
+    description
+    tags {
+        id
+        title
+        color
+    }
+    createdDate
+    status
+    epic {
+        id
+    }
+    user {
+        id
+        firstName
+        lastName
+        avatarURL
     }
 }

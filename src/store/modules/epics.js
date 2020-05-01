@@ -71,8 +71,7 @@ export default {
             EventBus.$emit('HIDE_LOADER', 1);
             return data;
         },
-        DELETE_EPIC: async function({ commit }, idArr) {
-            // TODO: delete all related tasks
+        DELETE_EPIC: async ({ commit }, idArr) => {
             EventBus.$emit('SHOW_LOADER', 1);
             const result = await apollo
                 .mutate({

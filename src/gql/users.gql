@@ -1,0 +1,26 @@
+query getAllUsers {
+    queryUser {
+        ...userResult
+    }
+}
+
+mutation adduser($fname: String!, $lname: String!, $email: String!, $avatarUrl: String) {
+    addUser(input: [{ firstName: $fname, lastName: $lname, email: $email, avatarURL: $avatarUrl }]) {
+        numUids
+        user {
+            ...userResult
+        }
+    }
+}
+
+fragment userResult on User {
+    id
+    email
+    firstName
+    lastName
+    avatarURL
+    tasks {
+        id
+        title
+    }
+}
