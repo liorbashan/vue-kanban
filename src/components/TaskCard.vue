@@ -12,7 +12,7 @@
                         <v-icon class="mr-2">edit</v-icon>
                         <v-list-item-title>Edit</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="deleteTask(task.id)">
+                    <v-list-item @click="confirmDeletion(task.id)">
                         <v-icon class="mr-2">delete</v-icon>
                         <v-list-item-title>Delete</v-list-item-title>
                     </v-list-item>
@@ -34,20 +34,49 @@
                 <badge :color="task.tags.color">{{task.tags.title}}</badge>
             </div>
         </div>
+        <!-- TASK FORM MODAL -->
+        <v-dialog v-model="formModal" persistent max-width="550">
+            <TaskForm
+                v-if="formModal"
+                :epicId="task.epic.id"
+                :task="task"
+                @closed="formModal = false"
+            ></TaskForm>
+        </v-dialog>
+        <ConfirmBox
+            :message="confirmBox.message"
+            v-if="confirmBox.show"
+            @close="getConfirmBoxValue"
+        ></ConfirmBox>
     </div>
 </template>
 <script>
+import TaskForm from '../components/TaskForm';
 import Badge from './Badge.vue';
+import ConfirmBox from '../components/ConfirmBox';
+import { EventBus } from '../eventBus';
 export default {
     name: 'TaskCard',
     components: {
         Badge,
+        TaskForm,
+        ConfirmBox,
     },
     props: {
         task: {
             type: Object,
             default: () => ({}),
         },
+    },
+    data() {
+        return {
+            formModal: false,
+            confirmBox: {
+                show: false,
+                message: null,
+                payload: null,
+            },
+        };
     },
     computed: {
         badgeColor() {
@@ -70,8 +99,34 @@ export default {
         },
     },
     methods: {
-        editTask: async () => {},
-        deleteTask: async () => {},
+        editTask() {
+            this.formModal = true;
+        },
+        confirmDeletion(id) {
+            this.confirmBox.message = `Are you sure you wish to delete task ${this.task.title}?`;
+            this.confirmBox.payload = id;
+            this.confirmBox.show = true;
+        },
+        async getConfirmBoxValue(confirmed) {
+            this.confirmBox.show = false;
+            if (confirmed) {
+                const deleteResult = await this.deleteTask(this.confirmBox.payload).catch((error) => {
+                    EventBus.$emit('SHOW_ERROR', error);
+                });
+                if (deleteResult) {
+                    await this.$store.dispatch('tasks/LIST_ALL_EPIC_TASKS', this.task.epic.id);
+                    EventBus.$emit('SHOW_SUCCESS', 'Task Deleted!');
+                }
+            }
+            this.confirmBox.message = null;
+            this.confirmBox.payload = null;
+        },
+        async deleteTask() {
+            const deleteResult = await this.$store.dispatch('tasks/DELETE_TASKS', [this.confirmBox.payload]).catch((error) => {
+                throw error;
+            });
+            return deleteResult ? true : false;
+        },
     },
 };
 </script>

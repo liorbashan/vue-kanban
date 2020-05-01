@@ -14,12 +14,15 @@
                                 label="Name"
                                 required
                             ></v-text-field>
-                            <v-text-field
+                            <v-textarea
                                 v-model="taskDesc"
                                 :rules="requiredRule"
                                 label="Description"
                                 required
-                            ></v-text-field>
+                                outlined
+                                clearable
+                                auto-grow
+                            ></v-textarea>
                             <v-select
                                 v-model="tagId"
                                 :items="tags"
@@ -64,6 +67,15 @@ export default {
             formTitle: 'Create New Task',
         };
     },
+    created() {
+        if (this.task) {
+            this.isEditMode = true;
+            this.taskTitle = this.task.title;
+            this.taskDesc = this.task.description;
+            this.tagId = this.task.tags.id;
+            this.user = this.task.user;
+        }
+    },
     computed: {
         tags() {
             return store.getters['tags/getTags'];
@@ -72,7 +84,6 @@ export default {
     methods: {
         close() {
             this.$refs.taskForm.reset();
-            this.task = null;
             this.$emit('closed');
         },
         async createNewTask() {
@@ -93,6 +104,7 @@ export default {
                     }
                 } else {
                     // TODO: edit task
+                    console.log('edit task');
                 }
                 this.close();
             }

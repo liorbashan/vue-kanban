@@ -140,14 +140,11 @@ export default {
             if (confirmed) {
                 await this.deleteEpic(this.confirmBox.payload);
             }
-            this.resetConfirmBox();
+            this.confirmBox.message = null;
+            this.confirmBox.payload = null;
         },
         async deleteEpic(id) {
             await this.$store.dispatch('epics/DELETE_EPIC', [id]);
-        },
-        resetConfirmBox() {
-            this.confirmBox.message = null;
-            this.confirmBox.payload = null;
         },
     },
 };
