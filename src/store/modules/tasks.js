@@ -21,15 +21,15 @@ export default {
                 return taskIdArr.includes(item.id);
             });
         },
-        UPDATE_TASK: function(state, payload) {
-            let updatedTask = state.task.find((x) => {
-                return x.id === payload.id;
+        TASK_STATUS_CHANGE: (state, updatedTask) => {
+            let task = state.tasks.find((x) => {
+                return x.id === updatedTask.id;
             });
-            // updatedTask.xx = payload.xx;
+            task.status = updatedTask.status;
         },
     },
     actions: {
-        LIST_ALL_EPIC_TASKS: async function({ commit }, epicId) {
+        LIST_ALL_EPIC_TASKS: async ({ commit }, epicId) => {
             let data = [];
             EventBus.$emit('SHOW_LOADER', 1);
             const result = await apollo
@@ -49,6 +49,29 @@ export default {
             }
             EventBus.$emit('HIDE_LOADER', 1);
             return data;
+        },
+        UPDATE_TASK_STATUS: async ({ commit }, payload) => {
+            let data = null;
+            EventBus.$emit('SHOW_LOADER', 1);
+            const result = await apollo
+                .mutate({
+                    mutation: taskGQL.changeTaskStatus,
+                    variables: {
+                        status: payload.newStatus,
+                        taskId: payload.taskId,
+                    },
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            if (result) {
+                if (result.data.updateTask.numUids === 1) {
+                    data = result.data.updateTask.task[0];
+                    commit('TASK_STATUS_CHANGE', data);
+                }
+            }
+            EventBus.$emit('HIDE_LOADER', 1);
+            return result;
         },
     },
     getters: {

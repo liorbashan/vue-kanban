@@ -78,31 +78,37 @@ export default {
             return list ? list : [];
         },
         backlog() {
-            const retVal = this.tasksList.filter((item) => {
+            return this.tasksList.filter((item) => {
                 return item.status === 'Backlog';
             });
-            return retVal;
         },
         inProgress() {
-            const retVal = this.tasksList.filter((item) => {
+            return this.tasksList.filter((item) => {
                 return item.status === 'InProgress';
             });
-            return retVal;
         },
         review() {
-            const retVal = this.tasksList.filter((item) => {
+            return this.tasksList.filter((item) => {
                 return item.status === 'Review';
             });
-            return retVal;
         },
         done() {
-            const retVal = this.tasksList.filter((item) => {
+            return this.tasksList.filter((item) => {
                 return item.status === 'Done';
             });
-            return retVal;
         },
     },
     methods: {
+        getComponentData() {
+            return {
+                on: {
+                    // change: this.handleChange,
+                    // input: this.inputChanged,
+                    // end: this.ended,
+                    add: this.draggableAdded,
+                },
+            };
+        },
         handleChange(element) {
             console.log('changed', element);
         },
@@ -112,27 +118,16 @@ export default {
         ended(element) {
             // console.log('dropped', element);
         },
-        added(element) {
-            console.log('added');
-            console.log('new lane: ', element.to.parentElement.id);
-            console.log('updated item: ', element.item.id);
-        },
-        updated(element) {
-            console.log(element);
-        },
-        getComponentData() {
-            return {
-                on: {
-                    // sschange: this.handleChange,
-                    input: this.inputChanged,
-                    end: this.ended,
-                    add: this.added,
-                    update: this.updated,
-                },
-                attr: {
-                    id: 'sssssssssss',
-                },
+        draggableAdded(element) {
+            // const newStatus = element.to.parentElement.id.replace(/\s/g, '');
+            const payload = {
+                taskId: element.item.id,
+                newStatus: element.to.parentElement.id.replace(/\s/g, ''),
             };
+            this.updateTaskStatus(payload);
+        },
+        async updateTaskStatus(payload) {
+            const updateStatusResult = await this.$store.dispatch('tasks/UPDATE_TASK_STATUS', payload);
         },
     },
 };
@@ -156,8 +151,9 @@ but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
     width: 320px;
     padding: 0.75rem;
     border-radius: 0.5rem;
-    margin: 0 4px;
+    margin: 4px;
     max-width: 400px;
+    min-height: 1000px;
     .lane-title {
         color: #4e4444;
         font-weight: 800;

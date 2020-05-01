@@ -1,5 +1,6 @@
 <template>
     <div class="card-wrapper">
+        <span class="caption font-weight-thin">{{task.id}}</span>
         <div class="card-header">
             <p class="card-title">{{task.title}}</p>
             <img
@@ -18,7 +19,6 @@
 import Badge from './Badge.vue';
 export default {
     name: 'TaskCard',
-    props: ['taskId'],
     components: {
         Badge,
     },
@@ -56,8 +56,12 @@ export default {
     border: 1px solid #fff;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
     border-radius: 0.25rem;
-    padding: 0.75rem;
+    padding: 0.25rem 0.75rem 0.75rem 0.75rem;
     cursor: move;
+    .caption{
+        font-family: 'Baloo Tamma 2', cursive !important;
+        font-size: 10px !important;
+    }
     .card-header {
         display: flex;
         flex-direction: row;
