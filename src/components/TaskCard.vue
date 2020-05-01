@@ -18,6 +18,7 @@
 import Badge from './Badge.vue';
 export default {
     name: 'TaskCard',
+    props: ['taskId'],
     components: {
         Badge,
     },

@@ -22,10 +22,11 @@
         </v-row>
         <v-divider light></v-divider>
         <v-row v-if="tasksList" class="justify-center align-strech mt-3">
-            <v-col class="lane" v-for="lane in board" :key="lane.title">
+            <v-col :id="lane.title" class="lane" v-for="lane in board" :key="lane.title">
                 <p class="lane-title">{{lane.title}}</p>
                 <!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
                 <draggable
+                    :component-data="getComponentData()"
                     :v-model="lane.tasks"
                     :animation="200"
                     ghost-class="ghost-card"
@@ -35,6 +36,7 @@
                     <TaskCard
                         v-for="(task) in lane.tasks"
                         :key="task.id"
+                        :id="task.id"
                         :task="task"
                         class="mt-3 cursor-move"
                     ></TaskCard>
@@ -100,7 +102,39 @@ export default {
             return retVal;
         },
     },
-    methods: {},
+    methods: {
+        handleChange(element) {
+            console.log('changed', element);
+        },
+        inputChanged(value) {
+            console.log(value);
+        },
+        ended(element) {
+            // console.log('dropped', element);
+        },
+        added(element) {
+            console.log('added');
+            console.log('new lane: ', element.to.parentElement.id);
+            console.log('updated item: ', element.item.id);
+        },
+        updated(element) {
+            console.log(element);
+        },
+        getComponentData() {
+            return {
+                on: {
+                    // sschange: this.handleChange,
+                    input: this.inputChanged,
+                    end: this.ended,
+                    add: this.added,
+                    update: this.updated,
+                },
+                attr: {
+                    id: 'sssssssssss',
+                },
+            };
+        },
+    },
 };
 </script>
 
@@ -120,15 +154,14 @@ but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
     background-color: #e6f5ff;
     min-width: 320px;
     width: 320px;
-    padding: .75rem;
-    border-radius: .5rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
     margin: 0 4px;
     max-width: 400px;
-    .lane-title{
+    .lane-title {
         color: #4e4444;
         font-weight: 800;
         font-size: 24px;
-
     }
 }
 </style>
