@@ -1,6 +1,6 @@
 <template>
     <v-container justify="center" class="white pa-2" fluid>
-        <v-row class="header-wrapper justify-center ma-auto">
+        <v-row dense class="header-wrapper justify-center ma-auto">
             <v-col align="left" col="2">
                 <v-btn @click="$router.back()" color="secondary" depressed>
                     <v-icon left dark>arrow_back_ios</v-icon>back
@@ -8,7 +8,6 @@
             </v-col>
             <v-col align="center" col="4">
                 <h1 class="black--text">
-                    Board:
                     <span class="primary--text display-1">{{name}}</span>
                     <span class="caption">({{id}})</span>
                 </h1>
@@ -153,7 +152,7 @@ but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
     border: 1px solid #4299e1;
 }
 .lane {
-    background-color: #e6f5ff;
+    background-color: #f7fafc;
     min-width: 320px;
     width: 320px;
     padding: 0.75rem;
@@ -163,8 +162,8 @@ but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
     min-height: 1000px;
     .lane-title {
         color: #4e4444;
-        font-weight: 800;
-        font-size: 24px;
+        font-weight: 500;
+        font-size: 18px;
     }
 }
 </style>

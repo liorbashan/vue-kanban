@@ -41,6 +41,16 @@
         <v-overlay z-index="9999" :value="loader.show">
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
+        <v-snackbar
+            :color="snackbar.color"
+            top
+            right
+            :timeout="snackbar.timeout"
+            v-model="snackbar.show"
+        >
+            {{ snackbar.message }}
+            <v-btn text @click="snackbar.show = false">Close</v-btn>
+        </v-snackbar>
     </v-app>
 </template>
 
@@ -67,6 +77,12 @@ export default {
                 counter: 0,
                 show: false,
             },
+            snackbar: {
+                show: false,
+                message: 'snackbar',
+                color: 'red darken-1',
+                timeout: 7000,
+            },
         };
     },
     created() {
@@ -81,12 +97,18 @@ export default {
         },
         initEventHandlers: function() {
             EventBus.$on('SHOW_ERROR', (payload) => {
-                this.error.message = payload;
-                this.error.show = true;
+                // this.error.message = payload;
+                // this.error.show = true;
+                this.snackbar.message = payload;
+                this.snackbar.color = 'error';
+                this.snackbar.show = true;
             });
             EventBus.$on('SHOW_SUCCESS', (payload) => {
-                this.success.message = payload;
-                this.success.show = true;
+                // this.success.message = payload;
+                // this.success.show = true;
+                this.snackbar.message = payload;
+                this.snackbar.color = 'success';
+                this.snackbar.show = true;
             });
             EventBus.$on('SHOW_LOADER', (payload) => {
                 if (payload) {

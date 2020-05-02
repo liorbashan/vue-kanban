@@ -139,7 +139,9 @@ export default {
             if (confirmed) {
                 const deleteResult = await this.deleteEpic(this.confirmBox.payload);
                 if (deleteResult) {
+                    EventBus.$emit('SHOW_SUCCESS', 'Epic Deleted Successfully');
                     await this.$store.dispatch('epics/FETCH_ALL_EPICS', this.id).catch((error) => {
+                        EventBus.$emit('SHOW_ERROR', error);
                         console.log(error);
                     });
                 }
@@ -149,6 +151,7 @@ export default {
         },
         async deleteEpic(id) {
             const deleteResult = await this.$store.dispatch('epics/DELETE_EPIC', [id]).catch((error) => {
+                EventBus.$emit('SHOW_ERROR', error);
                 throw error;
             });
             return deleteResult ? true : false;

@@ -110,7 +110,10 @@ export default {
         async getConfirmBoxValue(confirmed) {
             this.confirmBox.show = false;
             if (confirmed) {
-                await this.deleteProject(this.confirmBox.payload);
+                await this.deleteProject(this.confirmBox.payload).catch((error) => {
+                    EventBus.$emit('SHOW_ERROR', error);
+                    console.log(error);
+                });
             }
             this.resetConfirmBox();
         },
@@ -127,6 +130,7 @@ export default {
         async deleteProject(id) {
             const res = await this.$store.dispatch('projects/DELETE_PROJECT', id).catch((error) => {
                 console.log(error);
+                EventBus.$emit('SHOW_ERROR', error);
             });
             if (res) {
                 EventBus.$emit('SHOW_SUCCESS', `Project Deleted!`);

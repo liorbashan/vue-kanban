@@ -1,24 +1,6 @@
 <template>
     <div>
         <div class="card-wrapper">
-            <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                    <v-btn icon color="grey" v-on="on">
-                        <v-icon left>settings</v-icon>
-                    </v-btn>
-                </template>
-                <v-list light>
-                    <v-list-item @click="editTask(task.id)">
-                        <v-icon class="mr-2">edit</v-icon>
-                        <v-list-item-title>Edit</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item @click="confirmDeletion(task.id)">
-                        <v-icon class="mr-2">delete</v-icon>
-                        <v-list-item-title>Delete</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
-            <span class="caption font-weight-thin">{{task.id}}</span>
             <div class="card-header">
                 <p class="card-title">{{task.title}}</p>
                 <img
@@ -28,8 +10,26 @@
                 />
             </div>
             <div class="card-footer flex mt-4 justify-between items-center">
+                <v-menu offset-y>
+                    <template v-slot:activator="{ on }">
+                        <v-btn x-small icon text color="grey" v-on="on">
+                            <v-icon left>more_vert</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list light>
+                        <v-list-item @click="editTask(task.id)">
+                            <v-icon class="mr-2">edit</v-icon>
+                            <v-list-item-title>Edit</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="confirmDeletion(task.id)">
+                            <v-icon class="mr-2">delete</v-icon>
+                            <v-list-item-title>Delete</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <!-- <span class="caption font-weight-thin">{{task.id}}</span> -->
                 <span
-                    class="body-2 font-italic grey--text"
+                    class="task-date font-italic grey--text"
                 >{{task.createdDate | dateFormat(task.createdDate) }}</span>
                 <badge :color="task.tags.color">{{task.tags.title}}</badge>
             </div>
@@ -115,7 +115,7 @@ export default {
                 });
                 if (deleteResult) {
                     await this.$store.dispatch('tasks/LIST_ALL_EPIC_TASKS', this.task.epic.id);
-                    // EventBus.$emit('SHOW_SUCCESS', 'Task Deleted!');
+                    EventBus.$emit('SHOW_SUCCESS', 'Task Deleted!');
                 }
             }
             this.confirmBox.message = null;
@@ -137,6 +137,7 @@ export default {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
     border-radius: 0.25rem;
     padding: 0.25rem 0.75rem 0.75rem 0.75rem;
+    color: #4a5568;
     cursor: move;
     .caption {
         font-family: 'Baloo Tamma 2', cursive !important;
@@ -147,11 +148,10 @@ export default {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 32px;
         .card-title {
             font-weight: 500;
             margin: 0;
-            font-size: 20px;
+            font-size: 14px;
             text-transform: capitalize;
         }
         .card-desc {
@@ -170,6 +170,19 @@ export default {
         justify-content: space-between;
         flex-direction: row;
         align-items: baseline;
+        .task-date {
+            font-size: 12px;
+            font-style: italic;
+            flex-grow: 1;
+        }
+        button {
+            flex-shrink: 1;
+            &:hover {
+                &::before {
+                    opacity: 0;
+                }
+            }
+        }
     }
 }
 </style>
