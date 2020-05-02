@@ -1,6 +1,6 @@
 <template>
     <v-footer>
-        <span>&copy; 2019</span>
+        <span>&copy; 2020</span>
     </v-footer>
 </template>
 

@@ -14,6 +14,10 @@
         <v-row class="justify-center">
             <v-col md="8" col="12">
                 <v-data-table
+                    light
+                    dense
+                    hide-default-header
+                    hide-default-footer
                     :headers="headers"
                     :items="tagsList"
                     :items-per-page="10"
@@ -26,26 +30,27 @@
                                 <td>{{item.title}}</td>
                                 <td>{{item.color}}</td>
                                 <td>
-                                    <v-btn
-                                        @click="editTag(item.title)"
-                                        fab
-                                        depressed
-                                        color="secondary"
-                                        small
-                                    >
-                                        <v-icon>edit</v-icon>
-                                    </v-btn>
-                                </td>
-                                <td>
-                                    <v-btn
-                                        @click="deleteTag(item.id)"
-                                        fab
-                                        depressed
-                                        color="secondary"
-                                        small
-                                    >
-                                        <v-icon>delete</v-icon>
-                                    </v-btn>
+                                    <v-container class="d-flex justify-between">
+                                        <v-btn
+                                            class="mr-4"
+                                            @click="editTag(item.title)"
+                                            icon
+                                            depressed
+                                            color="info"
+                                            small
+                                        >
+                                            <v-icon>edit</v-icon>
+                                        </v-btn>
+                                        <v-btn
+                                            @click="deleteTag(item.id)"
+                                            icon
+                                            depressed
+                                            color="error"
+                                            small
+                                        >
+                                            <v-icon>delete</v-icon>
+                                        </v-btn>
+                                    </v-container>
                                 </td>
                             </tr>
                         </tbody>
@@ -72,7 +77,6 @@ export default {
                 { text: 'Name', value: 'title' },
                 { text: 'Color (#)', value: 'color' },
                 { text: '', value: '' },
-                { text: '', value: '' },
             ],
             formModal: false,
             tagToEdit: null,
@@ -91,6 +95,7 @@ export default {
         deleteTag: async function(tagId) {
             await this.$store.dispatch('tags/deleteTag', tagId);
             await this.$store.dispatch('tags/getAllTags');
+            EventBus.$emit('SHOW_ERROR', 'Tag Deleted')
         },
         editTag: async function(tagTitle) {
             this.tagToEdit = await this.$store.getters['tags/getTag'](tagTitle);
