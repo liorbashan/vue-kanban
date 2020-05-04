@@ -94,6 +94,7 @@ export default {
         async initData() {
             await this.$store.dispatch('tags/getAllTags');
             await this.$store.dispatch('projects/FETCH_ALL_PROJECTS');
+            await this.$store.dispatch('users/FETCH_ALL_USERS');
         },
         initEventHandlers: function() {
             EventBus.$on('SHOW_ERROR', (payload) => {

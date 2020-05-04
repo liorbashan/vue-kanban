@@ -4,6 +4,7 @@ import tasks from './modules/tasks';
 import tags from './modules/tags';
 import projects from './modules/projects';
 import epics from './modules/epics';
+import users from './modules/users';
 
 Vue.use(Vuex);
 
@@ -13,5 +14,6 @@ export default new Vuex.Store({
         projects,
         epics,
         tasks,
+        users,
     },
 });

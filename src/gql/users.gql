@@ -1,15 +1,31 @@
 query getAllUsers {
-    queryUser {
+    queryUser(order: { asc: lastName }) {
         ...userResult
     }
 }
 
-mutation adduser($fname: String!, $lname: String!, $email: String!, $avatarUrl: String) {
-    addUser(input: [{ firstName: $fname, lastName: $lname, email: $email, avatarURL: $avatarUrl }]) {
+mutation addNewUser($email: String!, $fname: String!, $lname: String!, $avatarUrl: String) {
+    addUser(input: [{ email: $email, firstName: $fname, lastName: $lname, avatarURL: $avatarUrl }]) {
         numUids
         user {
             ...userResult
         }
+    }
+}
+
+mutation etidUser($id: ID!, $fname: String!, $lname: String!, $avatarUrl: String) {
+    updateUser(input: { filter: { id: [$id] }, set: { firstName: $fname, lastName: $lname, avatarURL: $avatarUrl } }) {
+        numUids
+        user {
+            ...userResult
+        }
+    }
+}
+
+mutation deleteUser($idsToDelete: [ID!]) {
+    deleteUser(filter: { id: $idsToDelete }) {
+        msg
+        numUids
     }
 }
 
