@@ -30,7 +30,10 @@
                                 <td>{{item.firstName}}</td>
                                 <td>{{item.lastName}}</td>
                                 <td>{{item.email}}</td>
-                                <td>{{item.avatarUrl | avatar(item.firstName,item.lastName) }}</td>
+                                <td
+                                    class="avatar"
+                                    v-html="avatar(item.avatarUrl,item.firstName,item.lastName)"
+                                ></td>
                                 <td>
                                     <v-container class="d-flex justify-between">
                                         <v-btn
@@ -113,10 +116,7 @@ export default {
             this.userToEdit = await this.$store.getters['users/GET_USER'](userId);
             this.formModal = true;
         },
-    },
-    filters: {
         avatar(url, fname, lname) {
-            debugger;
             let result;
             if (url) {
                 result = url;
@@ -130,26 +130,29 @@ export default {
             return result;
         },
     },
+    filters: {},
 };
 </script>
 
-<style lang="scss" scoped>
-.avatar-circle {
-    width: 100px;
-    height: 100px;
-    background-color: green;
-    text-align: center;
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-}
-.initials {
-    position: relative;
-    top: 25px; /* 25% of parent */
-    font-size: 50px; /* 50% of parent */
-    line-height: 50px; /* 50% of parent */
-    color: #fff;
-    font-family: 'Courier New', monospace;
-    font-weight: bold;
+<style lang="scss">
+.avatar {
+    font-weight: 400;
+    div.avatar-circle {
+        width: 40px;
+        height: 40px;
+        background-color: green;
+        text-align: center;
+        border-radius: 50%;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        span.initials {
+            position: relative;
+            top: 12px; /* 25% of parent */
+            font-size: 20px; /* 50% of parent */
+            line-height: 20px; /* 50% of parent */
+            color: #fff;
+            text-transform: uppercase;
+        }
+    }
 }
 </style>

@@ -53,6 +53,7 @@ export default {
         ADD_NEW_TASK: async ({ commit }, payload) => {
             let data = null;
             EventBus.$emit('SHOW_LOADER', 1);
+            debugger;
             const result = await apollo
                 .mutate({
                     mutation: taskGQL.createNewTask,
@@ -62,7 +63,7 @@ export default {
                         tagId: payload.tagId,
                         epicId: payload.epicId,
                         time: new Date(),
-                        user: payload.user,
+                        userId: payload.userId,
                     },
                 })
                 .catch((error) => {

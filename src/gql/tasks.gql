@@ -1,5 +1,5 @@
-mutation createNewTask($taskTitle: String!, $taskDesc: String, $tagId: ID, $epicId: ID, $time: DateTime!, $user: UserRef) {
-    addTask(input: [{ title: $taskTitle, description: $taskDesc, tags: { id: $tagId }, status: Backlog, epic: { id: $epicId }, createdDate: $time, user: $user }]) {
+mutation createNewTask($taskTitle: String!, $taskDesc: String, $tagId: ID, $epicId: ID, $time: DateTime!, $userId: ID) {
+    addTask(input: [{ title: $taskTitle, description: $taskDesc, tags: { id: $tagId }, status: Backlog, epic: { id: $epicId }, createdDate: $time, user: { id: $userId } }]) {
         task {
             ...taskResult
         }

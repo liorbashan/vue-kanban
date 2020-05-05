@@ -31,6 +31,14 @@
                                 label="Tag"
                                 :rules="requiredRule"
                             ></v-select>
+                            <v-select
+                                v-model="userId"
+                                :items="users"
+                                item-text="firstName"
+                                item-value="id"
+                                label="Assigned"
+                                :rules="requiredRule"
+                            ></v-select>
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
@@ -61,7 +69,7 @@ export default {
             taskTitle: null,
             taskDesc: null,
             tagId: null,
-            user: null,
+            userId: null,
             requiredRule: [(v) => !!v || 'Name is required'],
             isEditMode: false,
             formTitle: 'Create New Task',
@@ -69,17 +77,21 @@ export default {
     },
     created() {
         if (this.task) {
+            this.formTitle = 'Update Task',
             this.isEditMode = true;
             this.taskTitle = this.task.title;
             this.taskDesc = this.task.description;
             this.tagId = this.task.tags.id;
-            this.user = this.task.user;
+            this.userId = this.task.user.id;
         }
     },
     computed: {
         tags() {
             return store.getters['tags/getTags'];
         },
+        users(){
+            return store.getters['users/GET_ALL_USERS'];
+        }
     },
     methods: {
         close() {
@@ -93,7 +105,7 @@ export default {
                     taskDesc: this.taskDesc,
                     tagId: this.tagId,
                     epicId: this.epicId,
-                    user: null,
+                    userId: this.userId,
                 };
                 if (!this.isEditMode) {
                     const task = await this.$store.dispatch('tasks/ADD_NEW_TASK', newTag).catch((error) => {
