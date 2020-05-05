@@ -63,7 +63,7 @@ export default {
                 .mutate({
                     mutation: userskGQL.addNewUser,
                     variables: {
-                        emali: payload.email,
+                        email: payload.email,
                         fname: payload.fname,
                         lname: payload.lname,
                         avatarUrl: payload.avatarUrl,
