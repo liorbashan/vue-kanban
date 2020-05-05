@@ -38,7 +38,7 @@
                                     <v-container class="d-flex justify-between">
                                         <v-btn
                                             class="mr-4"
-                                            @click="editUserg(item.id)"
+                                            @click="editUser(item.id)"
                                             icon
                                             depressed
                                             color="info"

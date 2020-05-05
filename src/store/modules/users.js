@@ -24,7 +24,9 @@ export default {
             let updatedUser = state.users.find((x) => {
                 return x.id === payload.id;
             });
-            updatedUser.fname = payload.fname;
+            updatedUser.firstName = payload.firstName;
+            updatedUser.lastName = payload.lastName;
+            updatedUser.avatarURL = payload.avatarURL;
         },
     },
     getters: {
@@ -32,7 +34,7 @@ export default {
             return state.users;
         },
         GET_USER: (state) => (userId) => {
-            return state.users.filter((item) => {
+            return state.users.find((item) => {
                 return item.id === userId;
             });
         },
@@ -96,6 +98,31 @@ export default {
                 data = result.data.deleteUser;
                 if (data.numUids === idsToDelete.length) {
                     commit('DELETE_USER', idsToDelete);
+                }
+            }
+            EventBus.$emit('HIDE_LOADER', 1);
+            return data;
+        },
+        UPDATE_USER: async ({ commit }, payload) => {
+            let data = null;
+            EventBus.$emit('SHOW_LOADER', 1);
+            const result = await apollo
+                .mutate({
+                    mutation: userskGQL.etidUser,
+                    variables: {
+                        id: payload.id,
+                        fname: payload.fname,
+                        lname: payload.lname,
+                        avatarUrl: payload.avatarUrl,
+                    },
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            if (result) {
+                data = result.data.updateUser;
+                if (data.numUids === 1) {
+                    commit('UPDATE_USER', data.user[0]);
                 }
             }
             EventBus.$emit('HIDE_LOADER', 1);

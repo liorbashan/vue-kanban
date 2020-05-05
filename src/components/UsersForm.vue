@@ -25,6 +25,7 @@
                                 v-model="email"
                                 :rules="requiredRule"
                                 label="Email"
+                                :disabled="isEditMode"
                                 required
                                 clearable
                                 auto-grow
@@ -74,10 +75,10 @@ export default {
     created() {
         if (this.user) {
             this.isEditMode = true;
-            this.fname = this.user.fname;
-            this.lname = this.user.lname;
+            this.fname = this.user.firstName;
+            this.lname = this.user.lastName;
             this.email = this.user.email;
-            this.avatarUrl = this.user.avatarUrl;
+            this.avatarUrl = this.user.avatarURL;
         }
     },
     computed: {
@@ -107,12 +108,13 @@ export default {
                     }
                 } else {
                     this.formTitle = 'Update User Details';
-                    // const updateResult = await this.$store.dispatch('users/UPDATE_EPIC', vars).catch((error) => {
-                    //     EventBus.$emit('SHOW_ERROR', error);
-                    // });
-                    // if (updateResult) {
-                    //     EventBus.$emit('SHOW_SUCCESS', `Epic Updated!`);
-                    // }
+                    payload.id = this.user.id;
+                    const updateResult = await this.$store.dispatch('users/UPDATE_USER', payload).catch((error) => {
+                        EventBus.$emit('SHOW_ERROR', error);
+                    });
+                    if (updateResult) {
+                        EventBus.$emit('SHOW_SUCCESS', `Epic Updated!`);
+                    }
                 }
 
                 this.close();

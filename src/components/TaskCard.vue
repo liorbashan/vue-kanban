@@ -3,11 +3,11 @@
         <div class="card-wrapper">
             <div class="card-header">
                 <p class="card-title">{{task.title}}</p>
-                <img
-                    class="w-6 h-6 rounded-full ml-3"
-                    src="https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"
-                    alt="Avatar"
-                />
+                <div class="d-flex">
+                    <div
+                        v-html="avatar(task.user.avatarURL,task.user.firstName,task.user.lastName)"
+                    ></div>
+                </div>
             </div>
             <div class="card-footer flex mt-4 justify-between items-center">
                 <v-menu offset-y>
@@ -127,10 +127,40 @@ export default {
             });
             return deleteResult ? true : false;
         },
+        avatar(url, fname, lname) {
+            let result;
+            if (url) {
+                result = `<img src="${url}" />`;
+            } else {
+                result = `
+                <div class="avatar-circle">
+                    <span class="initials">${fname.charAt(0)}${lname.charAt(0)}</span>
+                </div>
+                `;
+            }
+            return result;
+        },
     },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    background-color: green;
+    text-align: center;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    span.initials {
+        position: relative;
+        top: 12px; /* 25% of parent */
+        font-size: 20px; /* 50% of parent */
+        line-height: 20px; /* 50% of parent */
+        color: #fff;
+        text-transform: uppercase;
+    }
+}
 .card-wrapper {
     background-color: #fff;
     border: 1px solid #fff;
