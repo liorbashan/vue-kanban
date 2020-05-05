@@ -30,7 +30,7 @@
                                 <td>{{item.firstName}}</td>
                                 <td>{{item.lastName}}</td>
                                 <td>{{item.email}}</td>
-                                <td>{{item.avatarURL}}</td>
+                                <td>{{item.avatarUrl | avatar(item.firstName,item.lastName) }}</td>
                                 <td>
                                     <v-container class="d-flex justify-between">
                                         <v-btn
@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import { EventBus } from '@/eventBus';
 import UsersForm from '../components/UsersForm';
 export default {
     name: 'Userpage',
@@ -95,18 +96,60 @@ export default {
             this.userToEdit = null;
             this.formModal = true;
         },
-        deleteUser: async function(tagId) {
-            // await this.$store.dispatch('tags/deleteTag', tagId);
-            // await this.$store.dispatch('tags/getAllTags');
-            // EventBus.$emit('SHOW_ERROR', 'Tag Deleted');
+        deleteUser: async function(id) {
+            const deleteResult = await this.$store.dispatch('users/DELETE_USERS', [id]).catch((error) => {
+                EventBus.$emit('SHOW_ERROR', error);
+                throw error;
+            });
+            if (deleteResult) {
+                EventBus.$emit('SHOW_SUCCESS', 'User Deleted Successfully');
+                await this.$store.dispatch('users/FETCH_ALL_USERS', this.id).catch((error) => {
+                    EventBus.$emit('SHOW_ERROR', error);
+                    console.log(error);
+                });
+            }
         },
         editUser: async function(userId) {
             this.userToEdit = await this.$store.getters['users/GET_USER'](userId);
             this.formModal = true;
         },
     },
+    filters: {
+        avatar(url, fname, lname) {
+            debugger;
+            let result;
+            if (url) {
+                result = url;
+            } else {
+                result = `
+                <div class="avatar-circle">
+                    <span class="initials">${fname.charAt(0)}${lname.charAt(0)}</span>
+                </div>
+                `;
+            }
+            return result;
+        },
+    },
 };
 </script>
 
 <style lang="scss" scoped>
+.avatar-circle {
+    width: 100px;
+    height: 100px;
+    background-color: green;
+    text-align: center;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+.initials {
+    position: relative;
+    top: 25px; /* 25% of parent */
+    font-size: 50px; /* 50% of parent */
+    line-height: 50px; /* 50% of parent */
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
 </style>

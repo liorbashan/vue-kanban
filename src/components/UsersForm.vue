@@ -19,7 +19,6 @@
                                 :rules="requiredRule"
                                 label="Last Name"
                                 required
-                                clearable
                                 auto-grow
                             ></v-text-field>
                             <v-text-field
