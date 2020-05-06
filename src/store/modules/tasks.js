@@ -27,6 +27,15 @@ export default {
             });
             task.status = updatedTask.status;
         },
+        TASK_DETAILS_UPDATE: function(state, payload) {
+            let updatedTask = state.tasks.find((x) => {
+                return x.id === payload.id;
+            });
+            updatedTask.title = payload.title;
+            updatedTask.description = payload.description;
+            updatedTask.tags = payload.tags;
+            updatedTask.user = payload.user;
+        },
     },
     actions: {
         LIST_ALL_EPIC_TASKS: async ({ commit }, epicId) => {
@@ -99,6 +108,34 @@ export default {
             EventBus.$emit('HIDE_LOADER', 1);
             return result;
         },
+        UPDATE_TASK_DETAILS: async ({ commit }, payload) => {
+            let data = null;
+            EventBus.$emit('SHOW_LOADER', 1);
+            const result = await apollo
+                .mutate({
+                    mutation: taskGQL.editTask,
+                    variables: {
+                        taskId: payload.taskId,
+                        taskTitle: payload.taskTitle,
+                        taskDesc: payload.taskDesc,
+                        tagId: payload.tagId,
+                        userId: payload.userId,
+                    },
+                })
+                .catch((error) => {
+                    console.log(error);
+                    EventBus.$emit('HIDE_LOADER', 1);
+                    throw error;
+                });
+            if (result) {
+                data = result.data.updateTask;
+                if (data.numUids === 1) {
+                    commit('TASK_DETAILS_UPDATE', data.task[0]);
+                }
+            }
+            EventBus.$emit('HIDE_LOADER', 1);
+            return data;
+        },
         DELETE_TASKS: async ({ commit }, idToDeleteArr) => {
             let data = null;
             EventBus.$emit('SHOW_LOADER', 1);
@@ -126,6 +163,11 @@ export default {
         GET_EPIC_TASKS: (state) => (epicId) => {
             return state.tasks.filter((item) => {
                 return item.epic.id === epicId;
+            });
+        },
+        GET_TASK_BY_ID: (state) => (id) => {
+            return state.tasks.find((item) => {
+                return item.id === id;
             });
         },
     },

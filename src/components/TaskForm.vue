@@ -81,8 +81,8 @@ export default {
             this.isEditMode = true;
             this.taskTitle = this.task.title;
             this.taskDesc = this.task.description;
-            this.tagId = this.task.tags.id;
-            this.userId = this.task.user.id;
+            this.tagId = this.task.tags ? this.task.tags.id : null;
+            this.userId = this.task.user ? this.task.user.id : null;
         }
     },
     computed: {
@@ -100,7 +100,7 @@ export default {
         },
         async createNewTask() {
             if (this.$refs.taskForm.validate()) {
-                const newTag = {
+                const payload = {
                     taskTitle: this.taskTitle,
                     taskDesc: this.taskDesc,
                     tagId: this.tagId,
@@ -108,15 +108,20 @@ export default {
                     userId: this.userId,
                 };
                 if (!this.isEditMode) {
-                    const task = await this.$store.dispatch('tasks/ADD_NEW_TASK', newTag).catch((error) => {
+                    const task = await this.$store.dispatch('tasks/ADD_NEW_TASK', payload).catch((error) => {
                         EventBus.$emit('SHOW_ERROR', error);
                     });
                     if (task) {
                         EventBus.$emit('SHOW_SUCCESS', 'New Task Added');
                     }
                 } else {
-                    // TODO: edit task
-                    console.log('edit task');
+                    payload.taskId = this.task.id;
+                    const updateResult = await this.$store.dispatch('tasks/UPDATE_TASK_DETAILS', payload).catch((error) => {
+                        EventBus.$emit('SHOW_ERROR', error);
+                    });
+                    if (updateResult) {
+                        EventBus.$emit('SHOW_SUCCESS', `Task Updated!`);
+                    }
                 }
                 this.close();
             }

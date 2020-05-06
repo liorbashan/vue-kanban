@@ -5,6 +5,7 @@
                 <p class="card-title">{{task.title}}</p>
                 <div class="d-flex">
                     <div
+                        v-if="task.user"
                         v-html="avatar(task.user.avatarURL,task.user.firstName,task.user.lastName)"
                     ></div>
                 </div>
@@ -36,12 +37,7 @@
         </div>
         <!-- TASK FORM MODAL -->
         <v-dialog v-model="formModal" persistent max-width="550">
-            <TaskForm
-                v-if="formModal"
-                :epicId="task.epic.id"
-                :task="task"
-                @closed="formModal = false"
-            ></TaskForm>
+            <TaskForm v-if="formModal" :epicId="task.epic.id" :task="task" @closed="closeForm()"></TaskForm>
         </v-dialog>
         <ConfirmBox
             :message="confirmBox.message"
@@ -78,18 +74,7 @@ export default {
             },
         };
     },
-    computed: {
-        badgeColor() {
-            const mappings = {
-                Design: 'purple',
-                'Feature Request': 'teal',
-                Backend: 'blue',
-                QA: 'green',
-                default: 'teal',
-            };
-            return mappings[this.task.type] || mappings.default;
-        },
-    },
+    computed: {},
     filters: {
         dateFormat(date) {
             let d = new Date(date);
@@ -126,6 +111,12 @@ export default {
                 throw error;
             });
             return deleteResult ? true : false;
+        },
+        closeForm() {
+            if (this.task) {
+                this.task = this.$store.getters['tasks/GET_TASK_BY_ID'](this.task.id);
+            }
+            this.formModal = false;
         },
         avatar(url, fname, lname) {
             let result;

@@ -75,6 +75,7 @@ export default {
     created() {
         if (this.user) {
             this.isEditMode = true;
+            this.formTitle = 'Update User Details';
             this.fname = this.user.firstName;
             this.lname = this.user.lastName;
             this.email = this.user.email;
@@ -107,7 +108,6 @@ export default {
                         EventBus.$emit('SHOW_SUCCESS', `New Epic Created!`);
                     }
                 } else {
-                    this.formTitle = 'Update User Details';
                     payload.id = this.user.id;
                     const updateResult = await this.$store.dispatch('users/UPDATE_USER', payload).catch((error) => {
                         EventBus.$emit('SHOW_ERROR', error);
