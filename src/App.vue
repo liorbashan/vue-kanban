@@ -85,9 +85,13 @@ export default {
             },
         };
     },
+    beforeMount() {
+        this.$router.onReady(() => {
+            this.initData();
+        });
+    },
     created() {
         this.$vuetify.theme.dark = true;
-        this.initData();
         this.initEventHandlers();
     },
     methods: {
