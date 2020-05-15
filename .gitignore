@@ -6,3 +6,4 @@ Dockerfile
 /.vscode
 .vscode
 .devcontainer
+/live/

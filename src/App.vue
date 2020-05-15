@@ -1,172 +1,157 @@
 <template>
-  <div id="app">
-    <div class="flex justify-center">
-      <div class="min-h-screen flex overflow-x-scroll py-12">
-        <div
-          v-for="column in columns"
-          :key="column.title"
-          class="bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4"
+    <v-app id="inspire">
+        <!-- HEADER START -->
+        <Header />
+        <!-- HEADER END -->
+        <v-content>
+            <v-container class="pa-0 white align-start" fill-height fluid>
+                <router-view />
+            </v-container>
+        </v-content>
+        <!-- FOOTER START -->
+        <Footer />
+        <!-- FOOTER END -->
+        <!-- Globals: -->
+        <v-dialog v-model="error.show" persistent width="500">
+            <v-card>
+                <v-card-title class="headline red lighten-2" primary-title>Error!</v-card-title>
+                <v-card-text class="my-8">
+                    <h3>{{error.message}}</h3>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="secondary" depressed @click="error.show=false">Ok</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="success.show" persistent width="500">
+            <v-card>
+                <v-card-title class="headline green lighten-2" primary-title>Success!</v-card-title>
+                <v-card-text class="my-8">
+                    <h3>{{success.message}}</h3>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="secondary" depressed @click="success.show=false">Ok</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-overlay z-index="9999" :value="loader.show">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+        <v-snackbar
+            :color="snackbar.color"
+            top
+            right
+            :timeout="snackbar.timeout"
+            v-model="snackbar.show"
         >
-          <p class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{{column.title}}</p>
-          <!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
-          <draggable :list="column.tasks" :animation="200" ghost-class="ghost-card" group="tasks">
-            <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
-            <task-card
-              v-for="(task) in column.tasks"
-              :key="task.id"
-              :task="task"
-              class="mt-3 cursor-move"
-            ></task-card>
-            <!-- </transition-group> -->
-          </draggable>
-        </div>
-      </div>
-    </div>
-  </div>
+            {{ snackbar.message }}
+            <v-btn text @click="snackbar.show = false">Close</v-btn>
+        </v-snackbar>
+    </v-app>
 </template>
 
 <script>
-import draggable from "vuedraggable";
-import TaskCard from "./components/TaskCard.vue";
+import { EventBus } from './eventBus';
+import Homepage from './pages/Homepage';
+import Header from './components/Header';
+import Footer from './components/Footer';
 export default {
-  name: "App",
-  components: {
-    TaskCard,
-    draggable
-  },
-  data() {
-    return {
-      columns: [
-        {
-          title: "Backlog",
-          tasks: [
-            {
-              id: 1,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
+    name: 'App',
+    components: { Header, Footer },
+    data() {
+        return {
+            drawer: false,
+            error: {
+                show: false,
+                message: '',
             },
-            {
-              id: 2,
-              title: "Provide documentation on integrations",
-              date: "Sep 12"
+            success: {
+                show: false,
+                message: '',
             },
-            {
-              id: 3,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
+            loader: {
+                counter: 0,
+                show: false,
             },
-            {
-              id: 4,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
+            snackbar: {
+                show: false,
+                message: 'snackbar',
+                color: 'red darken-1',
+                timeout: 7000,
             },
-            {
-              id: 5,
-              title: "Test checkout flow",
-              date: "Sep 15",
-              type: "QA"
-            }
-          ]
+        };
+    },
+    beforeMount() {
+        this.$router.onReady(() => {
+            this.initData();
+        });
+    },
+    created() {
+        this.$vuetify.theme.dark = true;
+        this.initEventHandlers();
+    },
+    methods: {
+        async initData() {
+            await this.$store.dispatch('tags/getAllTags');
+            await this.$store.dispatch('projects/FETCH_ALL_PROJECTS');
+            await this.$store.dispatch('users/FETCH_ALL_USERS');
         },
-        {
-          title: "In Progress",
-          tasks: [
-            {
-              id: 6,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 7,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 8,
-              title: "Provide documentation on integrations",
-              date: "Sep 12",
-              type: "Backend"
-            }
-          ]
+        initEventHandlers: function() {
+            EventBus.$on('SHOW_ERROR', (payload) => {
+                // this.error.message = payload;
+                // this.error.show = true;
+                this.snackbar.message = payload;
+                this.snackbar.color = 'error';
+                this.snackbar.show = true;
+            });
+            EventBus.$on('SHOW_SUCCESS', (payload) => {
+                // this.success.message = payload;
+                // this.success.show = true;
+                this.snackbar.message = payload;
+                this.snackbar.color = 'success';
+                this.snackbar.show = true;
+            });
+            EventBus.$on('SHOW_LOADER', (payload) => {
+                if (payload) {
+                    this.loader.counter += payload;
+                }
+                this.loader.show = true;
+            });
+            EventBus.$on('HIDE_LOADER', (payload) => {
+                if (payload) {
+                    this.loader.counter -= payload;
+                    if (this.loader.counter < 1) {
+                        this.loader.counter = 0;
+                        this.loader.show = false;
+                    }
+                } else {
+                    this.loader.counter = 0;
+                    this.loader.show = false;
+                }
+            });
         },
-        {
-          title: "Review",
-          tasks: [
-            {
-              id: 9,
-              title: "Provide documentation on integrations",
-              date: "Sep 12"
-            },
-            {
-              id: 10,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 11,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 12,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 13,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            }
-          ]
-        },
-        {
-          title: "Done",
-          tasks: [
-            {
-              id: 14,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 15,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 16,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            }
-          ]
-        }
-      ]
-    };
-  }
+    },
 };
 </script>
 
-<style scoped>
-.column-width {
-  min-width: 320px;
-  width: 320px;
+<style>
+body {
+    font-family: 'Baloo Tamma 2', cursive;
 }
-/* Unfortunately @apply cannot be setup in codesandbox, 
-but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
-.ghost-card {
-  opacity: 0.5;
-  background: #F7FAFC;
-  border: 1px solid #4299e1;
+.v-application .headline,
+div#inspire {
+    font-family: 'Baloo Tamma 2', cursive;
+    color: #000;
+}
+#confirmTitle {
+    font-family: 'Baloo Tamma 2', cursive !important;
+    color: #fff !important;
+}
+a {
+    text-decoration: none;
 }
 </style>

@@ -1,0 +1,35 @@
+query getAllProjects {
+    queryProject {
+        id
+        name
+        description
+    }
+}
+
+mutation addNewProject($projectName: String!, $projectDesc: String) {
+    addProject(input: [{ epics: [], name: $projectName, description: $projectDesc }]) {
+        project {
+            id
+            name
+            description
+        }
+    }
+}
+
+mutation deleteProject($idToDelete: ID!) {
+    deleteProject(filter: { id: [$idToDelete] }) {
+        msg
+        numUids
+    }
+}
+
+mutation editProject($id: ID!, $projectDesc: String) {
+    updateProject(input: { filter: { id: [$id] }, set: { description: $projectDesc } }) {
+        numUids
+        project {
+            id
+            name
+            description
+        }
+    }
+}

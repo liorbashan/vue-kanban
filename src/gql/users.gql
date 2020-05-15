@@ -1,0 +1,42 @@
+query getAllUsers {
+    queryUser(order: { asc: lastName }) {
+        ...userResult
+    }
+}
+
+mutation addNewUser($email: String!, $fname: String!, $lname: String!, $avatarUrl: String) {
+    addUser(input: [{ email: $email, firstName: $fname, lastName: $lname, avatarURL: $avatarUrl }]) {
+        numUids
+        user {
+            ...userResult
+        }
+    }
+}
+
+mutation etidUser($id: ID!, $fname: String!, $lname: String!, $avatarUrl: String) {
+    updateUser(input: { filter: { id: [$id] }, set: { firstName: $fname, lastName: $lname, avatarURL: $avatarUrl } }) {
+        numUids
+        user {
+            ...userResult
+        }
+    }
+}
+
+mutation deleteUser($idsToDelete: [ID!]) {
+    deleteUser(filter: { id: $idsToDelete }) {
+        msg
+        numUids
+    }
+}
+
+fragment userResult on User {
+    id
+    email
+    firstName
+    lastName
+    avatarURL
+    tasks {
+        id
+        title
+    }
+}

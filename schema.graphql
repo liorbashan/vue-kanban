@@ -1,0 +1,47 @@
+type Task {
+    id: ID!
+    title: String! @search
+    description: String
+    tags: Tag!
+    createdDate: DateTime! @search
+    status: Status! @search(by: [hash])
+    epic: Epic! @hasInverse(field: tasks)
+    user: User @hasInverse(field: tasks)
+}
+
+type Epic {
+    id: ID!
+    name: String! @search
+    description: String
+    tasks: [Task] @hasInverse(field: epic)
+    project: Project! @hasInverse(field: epics)
+}
+
+type Project {
+    id: ID!
+    name: String! @id
+    description: String
+    epics: [Epic] @hasInverse(field: project)
+}
+
+enum Status {
+    Backlog
+    InProgress
+    Review
+    Done
+}
+
+type Tag {
+    id: ID!
+    title: String! @id
+    color: String!
+}
+
+type User {
+    id: ID!
+    email: String! @id
+    firstName: String! @search(by: [term])
+    lastName: String! @search(by: [term])
+    avatarURL: String
+    tasks: [Task] @hasInverse(field: user)
+}
