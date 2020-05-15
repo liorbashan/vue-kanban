@@ -32,7 +32,7 @@
                 <span
                     class="task-date font-italic grey--text"
                 >{{task.createdDate | dateFormat(task.createdDate) }}</span>
-                <badge :color="task.tags.color">{{task.tags.title}}</badge>
+                <Chip :color="task.tags.color">{{task.tags.title}}</Chip>
             </div>
         </div>
         <!-- TASK FORM MODAL -->
@@ -48,13 +48,13 @@
 </template>
 <script>
 import TaskForm from '../components/TaskForm';
-import Badge from './Badge.vue';
+import Chip from './Chip.vue';
 import ConfirmBox from '../components/ConfirmBox';
 import { EventBus } from '../eventBus';
 export default {
     name: 'TaskCard',
     components: {
-        Badge,
+        Chip,
         TaskForm,
         ConfirmBox,
     },

@@ -1,5 +1,5 @@
 <template>
-    <div class="badgeWrapper" :class="`${color} accent-1 ${color}--text text--darken-4`">
+    <div class="chipWrapper" :class="`${color} accent-1 ${color}--text text--darken-4`">
         <span class="dot" :class="`${color} accent-3`"></span>
         <span class="tag">
             <slot></slot>
@@ -17,7 +17,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.badgeWrapper {
+.chipWrapper {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
