@@ -1,7 +1,6 @@
 import apollo from '../../apolloClient';
 import taskGQL from '../../gql/tasks.gql';
 import { EventBus } from '@/eventBus';
-import store from '../index';
 const _ = require('lodash');
 
 export default {
@@ -62,7 +61,6 @@ export default {
         ADD_NEW_TASK: async ({ commit }, payload) => {
             let data = null;
             EventBus.$emit('SHOW_LOADER', 1);
-            debugger;
             const result = await apollo
                 .mutate({
                     mutation: taskGQL.createNewTask,
