@@ -8,7 +8,7 @@ const defaultOptions = {
     },
 };
 export default new ApolloClient({
-    uri: 'http://localhost:8080/graphql',
+    uri: 'https://kanban-db.us-west-2.aws.cloud.dgraph.io/graphql',
     defaultOptions,
     cache: null,
 });
