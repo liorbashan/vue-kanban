@@ -138,7 +138,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 body {
     font-family: 'Baloo Tamma 2', cursive;
 }
@@ -153,5 +153,16 @@ div#inspire {
 }
 a {
     text-decoration: none;
+}
+.empty-list-message {
+    color: gray;
+    text-align: center;
+    h2 {
+        font-size: 3em;
+    }
+    h4 {
+        font-size: 1.2em;
+        font-weight: 300;
+    }
 }
 </style>

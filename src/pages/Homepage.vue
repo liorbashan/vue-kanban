@@ -61,6 +61,10 @@
                 </v-card>
             </v-col>
         </v-row>
+        <div class="empty-list-message" v-if="projectsList.length === 0">
+            <h2>There are no Projects</h2>
+            <h4>But the good news is you get to create the first one (;</h4>
+        </div>
         <v-dialog v-model="formModal" persistent max-width="550">
             <ProjectForm v-if="formModal" :project="projToEdit" @closed="formModal = false"></ProjectForm>
         </v-dialog>
