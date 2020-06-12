@@ -7,7 +7,7 @@
                         <h2>{{formTitle}}</h2>
                     </v-card-title>
                     <v-card-text>
-                        <v-form ref="tagsForm" v-model="valid" lazy-validation>
+                        <v-form ref="tagsForm" @submit.prevent @keydown.esc.native="close" v-model="valid" lazy-validation>
                             <v-text-field
                                 v-model="formInputName"
                                 :rules="requiredRule"
@@ -21,6 +21,7 @@
                                 :rules="requiredRule"
                                 label="Color"
                                 required
+                                @keydown.enter.native="create"
                             ></v-text-field>
                         </v-form>
                     </v-card-text>
@@ -57,6 +58,11 @@ export default {
             this.formInputColor = this.tag.color;
             this.formTitle = `Update  '${this.tag.title}'  tag`;
         }
+    },
+    mounted() {
+        setTimeout(() => {
+            this.$refs.tagsForm.$el[0].focus();
+        }, 0);
     },
     methods: {
         close: function() {

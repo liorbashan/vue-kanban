@@ -2,7 +2,7 @@
     <div>
         <div class="card-wrapper">
             <div class="card-header">
-                <p class="card-title">{{task.title}}</p>
+                <p @click="openTaskDescription()" class="card-title">{{task.title}}</p>
                 <div class="d-flex">
                     <div
                         v-if="task.user"
@@ -35,9 +35,11 @@
                 <Chip :color="task.tags.color">{{task.tags.title}}</Chip>
             </div>
         </div>
-        <!-- TASK FORM MODAL -->
         <v-dialog v-model="formModal" persistent max-width="550">
             <TaskForm v-if="formModal" :epicId="task.epic.id" :task="task" @closed="closeForm()"></TaskForm>
+        </v-dialog>
+        <v-dialog v-model="taskDescModal" max-width="550">
+            <TaskSummery v-if="taskDescModal" :task="task" @editTask="taskDescModal=false;formModal=true"></TaskSummery>
         </v-dialog>
         <ConfirmBox
             :message="confirmBox.message"
@@ -50,6 +52,7 @@
 import TaskForm from '../components/TaskForm';
 import Chip from './Chip.vue';
 import ConfirmBox from '../components/ConfirmBox';
+import TaskSummery from '../components/TaskSummery';
 import { EventBus } from '../eventBus';
 export default {
     name: 'TaskCard',
@@ -57,6 +60,7 @@ export default {
         Chip,
         TaskForm,
         ConfirmBox,
+        TaskSummery,
     },
     props: {
         task: {
@@ -67,6 +71,7 @@ export default {
     data() {
         return {
             formModal: false,
+            taskDescModal:false,
             confirmBox: {
                 show: false,
                 message: null,
@@ -111,6 +116,9 @@ export default {
                 throw error;
             });
             return deleteResult ? true : false;
+        },
+        openTaskDescription() {
+            this.taskDescModal = true;
         },
         closeForm() {
             if (this.task) {
@@ -166,6 +174,7 @@ export default {
     }
     .card-header {
         display: flex;
+        cursor: pointer;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
