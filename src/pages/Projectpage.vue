@@ -67,6 +67,10 @@
                 </v-card>
             </v-col>
         </v-row>
+        <div class="empty-list-message" v-if="epicsList.length === 0">
+            <h2>There are no Epics</h2>
+            <h4>But the good news is you get to create the first one (;</h4>
+        </div>
         <v-dialog v-model="formModal" persistent max-width="550">
             <EpicForm v-if="formModal" :projectId="id" :epic="epicToEdit" @closed="closeForm()"></EpicForm>
         </v-dialog>

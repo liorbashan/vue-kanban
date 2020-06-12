@@ -61,6 +61,10 @@
                         </tbody>
                     </template>
                 </v-data-table>
+                <div class="empty-list-message" v-if="usersList.length === 0">
+                    <h2>There are no Users</h2>
+                    <h4>But the good news is you get to create the first one (;</h4>
+                </div>
             </v-col>
         </v-row>
         <v-dialog v-model="formModal" persistent max-width="550">

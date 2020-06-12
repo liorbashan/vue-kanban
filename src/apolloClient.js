@@ -8,7 +8,7 @@ const defaultOptions = {
     },
 };
 export default new ApolloClient({
-    uri: 'http://localhost:8080/graphql',
+    uri: process.env.VUE_APP_GRAPHQL_URL,
     defaultOptions,
     cache: null,
 });

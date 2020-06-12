@@ -28,7 +28,9 @@
                             <tr v-for="item in items" :key="item.id">
                                 <td>{{item.id}}</td>
                                 <td>{{item.title}}</td>
-                                <td>{{item.color}}</td>
+                                <td>
+                                    <div :class="dotColor(item.color)"></div>
+                                </td>
                                 <td>
                                     <v-container class="d-flex justify-between">
                                         <v-btn
@@ -56,6 +58,10 @@
                         </tbody>
                     </template>
                 </v-data-table>
+                <div class="empty-list-message" v-if="tagsList.length === 0">
+                    <h2>There are no Tags</h2>
+                    <h4>But the good news is you get to create the first one (;</h4>
+                </div>
             </v-col>
         </v-row>
         <v-dialog v-model="formModal" persistent max-width="550">
@@ -95,15 +101,23 @@ export default {
         deleteTag: async function(tagId) {
             await this.$store.dispatch('tags/deleteTag', tagId);
             await this.$store.dispatch('tags/getAllTags');
-            EventBus.$emit('SHOW_ERROR', 'Tag Deleted')
+            EventBus.$emit('SHOW_ERROR', 'Tag Deleted');
         },
         editTag: async function(tagTitle) {
             this.tagToEdit = await this.$store.getters['tags/getTag'](tagTitle);
             this.formModal = true;
+        },
+        dotColor(color) {
+            return `dot accent-3 ${color}`;
         },
     },
 };
 </script>
 
 <style lang="scss" scoped>
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+}
 </style>
