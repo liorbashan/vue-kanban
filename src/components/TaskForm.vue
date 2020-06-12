@@ -7,11 +7,17 @@
                         <h2>{{formTitle}}</h2>
                     </v-card-title>
                     <v-card-text>
-                        <v-form ref="taskForm" v-model="valid" lazy-validation>
+                        <v-form
+                            ref="taskForm"
+                            @keydown.native.esc="close()"
+                            v-model="valid"
+                            lazy-validation
+                        >
                             <v-text-field
                                 v-model="taskTitle"
                                 :rules="requiredRule"
                                 label="Name"
+                                ref="firstInput"
                                 required
                             ></v-text-field>
                             <v-textarea
@@ -38,6 +44,7 @@
                                 item-value="id"
                                 label="Assigned"
                                 :rules="requiredRule"
+                                @keydown.enter.native="createNewTask"
                             ></v-select>
                         </v-form>
                     </v-card-text>
@@ -77,21 +84,25 @@ export default {
     },
     created() {
         if (this.task) {
-            this.formTitle = 'Update Task',
-            this.isEditMode = true;
+            (this.formTitle = 'Update Task'), (this.isEditMode = true);
             this.taskTitle = this.task.title;
             this.taskDesc = this.task.description;
             this.tagId = this.task.tags ? this.task.tags.id : null;
             this.userId = this.task.user ? this.task.user.id : null;
         }
     },
+    mounted() {
+        setTimeout(() => {
+            this.$refs.firstInput.focus();
+        }, 0);
+    },
     computed: {
         tags() {
             return store.getters['tags/getTags'];
         },
-        users(){
+        users() {
             return store.getters['users/GET_ALL_USERS'];
-        }
+        },
     },
     methods: {
         close() {

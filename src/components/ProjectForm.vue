@@ -7,19 +7,21 @@
                         <h2>{{formTitle}}</h2>
                     </v-card-title>
                     <v-card-text>
-                        <v-form ref="projectsForm" v-model="valid" lazy-validation>
+                        <v-form ref="projectsForm" @keydown.esc.native="close" v-model="valid" lazy-validation>
                             <v-text-field
                                 v-model="formInputName"
                                 :rules="requiredRule"
                                 label="Name"
                                 required
                                 :disabled="isEditMode"
+                                ref="firstInput"
                             ></v-text-field>
 
                             <v-text-field
                                 v-model="formInputDesc"
                                 :rules="requiredRule"
                                 label="Description"
+                                 @keydown.enter.native="create"
                                 required
                             ></v-text-field>
                         </v-form>
@@ -57,6 +59,11 @@ export default {
             this.formInputDesc = this.project.description;
             this.formTitle = `Update  '${this.project.name}'  project`;
         }
+    },
+    mounted() {
+        setTimeout(() => {
+            this.$refs.firstInput.focus();
+        }, 0);
     },
     methods: {
         close: function() {

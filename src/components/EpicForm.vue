@@ -7,13 +7,14 @@
                         <h2>{{formTitle}}</h2>
                     </v-card-title>
                     <v-card-text>
-                        <v-form ref="epicForm" v-model="valid" lazy-validation>
+                        <v-form ref="epicForm" @keydown.esc.native="close" v-model="valid" lazy-validation>
                             <v-text-field
                                 v-model="formInputName"
                                 :rules="requiredRule"
                                 label="Name"
                                 required
                                 :disabled="isEditMode"
+                                ref="firstInput"
                             ></v-text-field>
 
                             <v-text-field
@@ -21,6 +22,7 @@
                                 :rules="requiredRule"
                                 label="Description"
                                 required
+                                @keydown.enter.native="create"
                             ></v-text-field>
                         </v-form>
                     </v-card-text>
@@ -57,6 +59,11 @@ export default {
             this.formInputDesc = this.epic.description;
             this.formTitle = `Update  ${this.epic.name}`;
         }
+    },
+    mounted() {
+        setTimeout(() => {
+            this.$refs.firstInput.focus();
+        }, 0);
     },
     methods: {
         close: function() {

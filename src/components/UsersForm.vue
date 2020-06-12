@@ -7,12 +7,13 @@
                         <h2>{{formTitle}}</h2>
                     </v-card-title>
                     <v-card-text>
-                        <v-form ref="userForm" v-model="valid" lazy-validation>
+                        <v-form ref="userForm" @submit.prevent @keydown.esc.native="close" v-model="valid" lazy-validation>
                             <v-text-field
                                 v-model="fname"
                                 :rules="requiredRule"
                                 label="First Name"
                                 required
+                                ref="firstInput"
                             ></v-text-field>
                             <v-text-field
                                 v-model="lname"
@@ -35,6 +36,7 @@
                                 label="Avatar Url"
                                 clearable
                                 auto-grow
+                                @keydown.enter.native="createNewUser"
                             ></v-text-field>
                         </v-form>
                     </v-card-text>
@@ -81,6 +83,11 @@ export default {
             this.email = this.user.email;
             this.avatarUrl = this.user.avatarURL;
         }
+    },
+    mounted() {
+        setTimeout(() => {
+            this.$refs.firstInput.focus();
+        }, 0);
     },
     computed: {
         usersList() {
