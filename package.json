@@ -5,6 +5,7 @@
   "description": "",
   "scripts": {
     "serve": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
     "serve:prod": "vue-cli-service serve --mode production",
     "build": "vue-cli-service build",
     "build:prod": "vue-cli-service build --mode production",
