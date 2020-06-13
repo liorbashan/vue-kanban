@@ -9,8 +9,7 @@
     "serve:prod": "vue-cli-service serve --mode production",
     "build": "vue-cli-service build",
     "build:prod": "vue-cli-service build --mode production",
-    "lint": "vue-cli-service lint",
-    "start": "npm run serve:prod"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "apollo-boost": "^0.4.7",
