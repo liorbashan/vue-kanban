@@ -4,15 +4,15 @@ import router from './router';
 import store from './store';
 import apollo from './apolloClient';
 import vuetify from './plugins/vuetify';
-// Import the Auth0 configuration
-import { domain, clientId } from '../auth_config.json';
 // Import the plugin here
 import { Auth0Plugin } from './auth';
 
+const authDomain = process.env.VUE_APP_AUTH_DOMAIN;
+const authClientId = process.env.VUE_APP_AUTH_CLIENT_ID;
 // Install the authentication plugin here
 Vue.use(Auth0Plugin, {
-    domain,
-    clientId,
+    domain: authDomain,
+    clientId: authClientId,
     onRedirectCallback: (appState) => {
         router.push(appState && appState.targetUrl ? appState.targetUrl : window.location.pathname);
     },
