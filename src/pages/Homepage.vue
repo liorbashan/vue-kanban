@@ -2,7 +2,7 @@
     <v-container justify="center" class="white pa-2" fluid>
         <v-row class="header-wrapper justify-center ma-auto">
             <v-col align="left" col="2">
-                <h1 class="black--text">Upper Funnel Projects:</h1>
+                <h1 class="black--text">{{applicationName}} Projects:</h1>
                 <h3>Amount of Projects: {{numOfProjects}}</h3>
             </v-col>
             <v-col align="right" col="2">
@@ -88,6 +88,7 @@ export default {
         return {
             formModal: false,
             projToEdit: null,
+            applicationName: process.env.VUE_APP_APPLICATION_NAME || '',
             confirmBox: {
                 show: false,
                 message: null,

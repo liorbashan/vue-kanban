@@ -162,23 +162,24 @@ export default {
 }
 .card-wrapper {
     background-color: #fff;
-    border: 1px solid #fff;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 12px 8px;
+    box-shadow: 0px 21px 16px -19px #5a5a5a;// 0 8px 6px -6px #5a5a5a;
     border-radius: 0.25rem;
     padding: 0.25rem 0.75rem 0.75rem 0.75rem;
     color: #4a5568;
     cursor: move;
+    border: 1px solid #2096e6;
     .caption {
         font-family: 'Baloo Tamma 2', cursive !important;
         font-size: 10px !important;
     }
     .card-header {
         display: flex;
-        cursor: pointer;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
         .card-title {
+            cursor: pointer;
             font-weight: 500;
             margin: 0;
             font-size: 14px;

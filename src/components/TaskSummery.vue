@@ -13,6 +13,7 @@
                             outlined
                             disabled
                         ></v-textarea>
+                        <v-text-field v-model="userName" label="Assigned To" disabled></v-text-field>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
@@ -31,7 +32,9 @@ export default {
     name: 'TaskSummery',
     props: ['task'],
     data() {
-        return {};
+        return {
+            userName: `${this.task.user.firstName} ${this.task.user.lastName}`,
+        };
     },
     methods: {
         editTask() {
