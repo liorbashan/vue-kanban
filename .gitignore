@@ -8,3 +8,4 @@ Dockerfile
 .devcontainer
 /live/
 *.local
+auth_config.json

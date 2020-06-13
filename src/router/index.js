@@ -1,5 +1,7 @@
 import Vue from 'vue';
+import { authGuard } from '../auth/authGuard';
 import Router from 'vue-router';
+import Profile from '../views/Profile';
 import Homepage from '../pages/Homepage';
 import Tagspage from '../pages/Tagspage';
 import Epicpage from '../pages/Epicpage';
@@ -21,11 +23,13 @@ export default new Router({
             path: '/tags',
             name: 'Tagspage',
             component: Tagspage,
+            beforeEnter: authGuard,
         },
         {
             path: '/users',
             name: 'Userpage',
             component: Userpage,
+            beforeEnter: authGuard,
         },
         {
             path: '/project/:id/:name',
@@ -38,6 +42,12 @@ export default new Router({
             name: 'Epicpage',
             component: Epicpage,
             props: true,
+        },
+        {
+            path: '/profile',
+            name: 'profile',
+            component: Profile,
+            beforeEnter: authGuard,
         },
     ],
 });

@@ -43,6 +43,21 @@
                 </v-btn>
             </router-link>
             <v-toolbar-title>{{applicationName}} Kanban</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <div v-if="!$auth.loading">
+                <!-- show login when not authenticated -->
+                <v-btn depressed text v-if="!$auth.isAuthenticated" @click="login">
+                    Login
+                    <v-icon>login</v-icon>
+                </v-btn>
+                <!-- show logout when authenticated -->
+                <router-link v-if="$auth.isAuthenticated" class="white--text" to="/profile">
+                    <v-btn depressed fab text>
+                        <img class="userIcon" :src="$auth.user.picture" />
+                    </v-btn>
+                </router-link>
+                <v-btn depressed text v-if="$auth.isAuthenticated" @click="logout">Log out</v-btn>
+            </div>
         </v-app-bar>
     </div>
 </template>
@@ -62,11 +77,29 @@ export default {
             ],
         };
     },
+    methods: {
+        login() {
+            this.$auth.loginWithRedirect();
+        },
+        // Log the user out
+        logout() {
+            this.$auth.logout({
+                returnTo: window.location.origin,
+            });
+        },
+    },
 };
 </script>
 
 <style lang="scss" scoped>
+$iconSize: 32px;
 a {
     color: #fff;
+}
+.userIcon {
+    max-width: 100%;
+    width: $iconSize;
+    height: $iconSize;
+    border-radius: $iconSize;
 }
 </style>
