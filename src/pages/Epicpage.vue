@@ -152,7 +152,7 @@ but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
     border: 1px solid #4299e1;
 }
 .lane {
-    background-color: #f7fafc;
+    background-color: #b9e3ff;
     min-width: 320px;
     width: 320px;
     padding: 0.75rem;
