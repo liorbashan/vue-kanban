@@ -1,7 +1,6 @@
 node_modules
 npm-debug.log
 debug.log
-Dockerfile
 /dist
 /.vscode
 .vscode
