@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
     <div>
         <v-navigation-drawer v-model="drawer" temporary dark app clipped>
@@ -10,7 +11,7 @@
 
                 <v-list-item link>
                     <v-list-item-content>
-                        <v-list-item-title class="title">{{applicationName}}</v-list-item-title>
+                        <v-list-item-title class="title">{{ applicationName }}</v-list-item-title>
                         <v-list-item-subtitle>888</v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
@@ -23,12 +24,7 @@
                     </v-list-item-icon>
                     <v-list-item-content>
                         <router-link class="white--text" :to="item.link">
-                            <v-btn
-                                class="white--text"
-                                depressed
-                                color="transparent"
-                                tile
-                            >{{item.text}}</v-btn>
+                            <v-btn class="white--text" depressed color="transparent" tile>{{ item.text }}</v-btn>
                         </router-link>
                     </v-list-item-content>
                 </v-list-item>
@@ -42,7 +38,7 @@
                     <v-icon>home</v-icon>
                 </v-btn>
             </router-link>
-            <v-toolbar-title>{{applicationName}} Kanban</v-toolbar-title>
+            <v-toolbar-title>{{ applicationName }} Kanban</v-toolbar-title>
             <v-spacer></v-spacer>
             <div v-if="!$auth.loading">
                 <!-- show login when not authenticated -->
@@ -65,6 +61,7 @@
 <script>
 import { EventBus } from '@/eventBus';
 export default {
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Homepage',
     data() {
         return {

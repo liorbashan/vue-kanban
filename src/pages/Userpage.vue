@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-container justify="center" class="white pa-2" fluid>
         <v-row align="center" justify="space-between" class="justify-center">
@@ -13,46 +14,21 @@
         </v-row>
         <v-row class="justify-center">
             <v-col md="8" col="12">
-                <v-data-table
-                    light
-                    dense
-                    hide-default-header
-                    hide-default-footer
-                    :headers="headers"
-                    :items="usersList"
-                    :items-per-page="10"
-                    class="elevation-1"
-                >
+                <v-data-table light dense hide-default-header hide-default-footer :headers="headers" :items="usersList" :items-per-page="10" class="elevation-1">
                     <template v-if="usersList.length > 0" v-slot:body="{ items }">
                         <tbody>
                             <tr v-for="item in items" :key="item.id">
-                                <td>{{item.id}}</td>
-                                <td>{{item.firstName}}</td>
-                                <td>{{item.lastName}}</td>
-                                <td>{{item.email}}</td>
-                                <td
-                                    class="avatar"
-                                    v-html="avatar(item.avatarUrl,item.firstName,item.lastName)"
-                                ></td>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.firstName }}</td>
+                                <td>{{ item.lastName }}</td>
+                                <td>{{ item.email }}</td>
+                                <td class="avatar" v-html="avatar(item.avatarUrl, item.firstName, item.lastName)"></td>
                                 <td>
                                     <v-container class="d-flex justify-between">
-                                        <v-btn
-                                            class="mr-4"
-                                            @click="editUser(item.id)"
-                                            icon
-                                            depressed
-                                            color="info"
-                                            small
-                                        >
+                                        <v-btn class="mr-4" @click="editUser(item.id)" icon depressed color="info" small>
                                             <v-icon>edit</v-icon>
                                         </v-btn>
-                                        <v-btn
-                                            @click="deleteUser(item.id)"
-                                            icon
-                                            depressed
-                                            color="error"
-                                            small
-                                        >
+                                        <v-btn @click="deleteUser(item.id)" icon depressed color="error" small>
                                             <v-icon>delete</v-icon>
                                         </v-btn>
                                     </v-container>
@@ -77,6 +53,7 @@
 import { EventBus } from '@/eventBus';
 import UsersForm from '../components/UsersForm';
 export default {
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Userpage',
     components: { UsersForm },
     data() {
@@ -103,7 +80,7 @@ export default {
             this.userToEdit = null;
             this.formModal = true;
         },
-        deleteUser: async function(id) {
+        deleteUser: async function (id) {
             const deleteResult = await this.$store.dispatch('users/DELETE_USERS', [id]).catch((error) => {
                 EventBus.$emit('SHOW_ERROR', error);
                 throw error;
@@ -116,7 +93,7 @@ export default {
                 });
             }
         },
-        editUser: async function(userId) {
+        editUser: async function (userId) {
             this.userToEdit = await this.$store.getters['users/GET_USER'](userId);
             this.formModal = true;
         },

@@ -2,18 +2,16 @@
     <v-container justify="center" class="white pa-2" fluid>
         <v-row dense class="header-wrapper justify-center ma-auto">
             <v-col align="left" col="2">
-                <v-btn @click="$router.back()" color="secondary" depressed>
-                    <v-icon left dark>arrow_back_ios</v-icon>back
-                </v-btn>
+                <v-btn @click="$router.back()" color="secondary" depressed> <v-icon left dark>arrow_back_ios</v-icon>back </v-btn>
             </v-col>
             <v-col align="center" col="4">
                 <h1 class="black--text">
-                    <span class="primary--text display-1">{{name}}</span>
-                    <span class="caption">({{id}})</span>
+                    <span class="primary--text display-1">{{ name }}</span>
+                    <span class="caption">({{ id }})</span>
                 </h1>
             </v-col>
             <v-col align="right" col="2">
-                <v-btn @click="formModal=true" color="secondary" depressed>
+                <v-btn @click="formModal = true" color="secondary" depressed>
                     add
                     <v-icon right dark>add_circle</v-icon>
                 </v-btn>
@@ -26,23 +24,11 @@
         <v-divider light></v-divider>
         <v-row v-if="tasksList" class="justify-center align-strech mt-3">
             <v-col :id="lane.title" class="lane" v-for="lane in board" :key="lane.title">
-                <p class="lane-title">{{lane.title}}</p>
+                <p class="lane-title">{{ lane.title }}</p>
                 <!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
-                <draggable
-                    :component-data="getComponentData()"
-                    :v-model="lane.tasks"
-                    :animation="200"
-                    ghost-class="ghost-card"
-                    group="tasks"
-                >
+                <draggable :component-data="getComponentData()" :v-model="lane.tasks" :animation="200" ghost-class="ghost-card" group="tasks">
                     <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
-                    <TaskCard
-                        v-for="(task) in lane.tasks"
-                        :key="task.id"
-                        :id="task.id"
-                        :task="task"
-                        class="mt-3 cursor-move"
-                    ></TaskCard>
+                    <TaskCard v-for="task in lane.tasks" :key="task.id" :id="task.id" :task="task" class="mt-3 cursor-move"></TaskCard>
                     <!-- </transition-group> -->
                 </draggable>
             </v-col>
@@ -56,6 +42,7 @@ import TaskCard from '../components/TaskCard';
 import TaskForm from '../components/TaskForm';
 import store from '../store';
 export default {
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Epicpage',
     props: ['id', 'name'],
     components: {
