@@ -2,8 +2,8 @@
     <v-container justify="center" class="white pa-2" fluid>
         <v-row class="header-wrapper justify-center ma-auto">
             <v-col align="left" col="2">
-                <h1 class="black--text">{{applicationName}} Projects:</h1>
-                <h3>Amount of Projects: {{numOfProjects}}</h3>
+                <h1 class="black--text">{{ applicationName }} Projects:</h1>
+                <h3>Amount of Projects: {{ numOfProjects }}</h3>
             </v-col>
             <v-col align="right" col="2">
                 <v-btn @click="openCreateForm()" color="secondary" depressed>
@@ -18,42 +18,21 @@
         <v-divider light></v-divider>
         <v-row class="justify-center">
             <v-col v-if="projectsList" flex class="d-flex flex-wrap justify-center" xl="8">
-                <v-card
-                    class="projectCard"
-                    color="#e8fcff"
-                    v-for="(item, index) in projectsList"
-                    :key="index"
-                >
+                <v-card class="projectCard" color="#e8fcff" v-for="(item, index) in projectsList" :key="index">
                     <v-card-title class="headline">
-                        {{item.name}}
-                        <span class="caption ml-2">({{item.id}})</span>
+                        {{ item.name }}
+                        <span class="caption ml-2">({{ item.id }})</span>
                     </v-card-title>
-                    <v-card-subtitle
-                        class="subtitle black--text font-weight-regular subtitle-1"
-                    >{{item.description}}</v-card-subtitle>
+                    <v-card-subtitle class="subtitle black--text font-weight-regular subtitle-1">{{ item.description }}</v-card-subtitle>
                     <v-card-actions class="action d-flex justify-space-between">
-                        <router-link :to="{name:'Projectpage',params:{id:item.id, name:item.name}}">
+                        <router-link :to="{ name: 'Projectpage', params: { id: item.id, name: item.name } }">
                             <v-btn color="secondary" depressed>View Epics</v-btn>
                         </router-link>
                         <div class="btn-wrapper">
-                            <v-btn
-                                @click="editProject(item.id)"
-                                fab
-                                depressed
-                                outlined
-                                color="grey darken-4"
-                                small
-                            >
+                            <v-btn @click="editProject(item.id)" fab depressed outlined color="grey darken-4" small>
                                 <v-icon>edit</v-icon>
                             </v-btn>
-                            <v-btn
-                                @click="confirmDeletion(item.id)"
-                                fab
-                                depressed
-                                outlined
-                                color="grey darken-4"
-                                small
-                            >
+                            <v-btn @click="confirmDeletion(item.id)" fab depressed outlined color="grey darken-4" small>
                                 <v-icon>delete</v-icon>
                             </v-btn>
                         </div>
@@ -68,11 +47,7 @@
         <v-dialog v-model="formModal" persistent max-width="550">
             <ProjectForm v-if="formModal" :project="projToEdit" @closed="formModal = false"></ProjectForm>
         </v-dialog>
-        <ConfirmBox
-            :message="confirmBox.message"
-            v-if="confirmBox.show"
-            @close="getConfirmBoxValue"
-        ></ConfirmBox>
+        <ConfirmBox :message="confirmBox.message" v-if="confirmBox.show" @close="getConfirmBoxValue"></ConfirmBox>
     </v-container>
 </template>
 
@@ -82,6 +57,7 @@ import ConfirmBox from '../components/ConfirmBox';
 import { EventBus } from '../eventBus';
 import { mapGetters } from 'vuex';
 export default {
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Homepage',
     components: { ProjectForm, ConfirmBox },
     data() {

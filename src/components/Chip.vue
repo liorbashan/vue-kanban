@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <div class="chipWrapper" :class="`${color} accent-1 ${color}--text text--darken-4`">
         <span class="dot" :class="`${color} accent-3`"></span>
@@ -31,10 +32,10 @@ export default {
         align-self: center;
         margin: 0 12px 0 0;
     }
-    .tag{
-      align-self: center;
-      font-weight: 500;
-      font-size: .9rem;
+    .tag {
+        align-self: center;
+        font-weight: 500;
+        font-size: 0.9rem;
     }
 }
 </style>
