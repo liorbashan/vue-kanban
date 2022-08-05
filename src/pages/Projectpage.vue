@@ -2,17 +2,15 @@
     <v-container justify="center" class="white pa-2" fluid>
         <v-row class="header-wrapper justify-center ma-auto">
             <v-col align="left" col="2">
-                <v-btn @click="$router.back()" color="secondary" depressed>
-                    <v-icon left dark>arrow_back_ios</v-icon>back
-                </v-btn>
+                <v-btn @click="$router.back()" color="secondary" depressed> <v-icon left dark>arrow_back_ios</v-icon>back </v-btn>
             </v-col>
             <v-col align="center" col="4">
                 <h1 class="black--text">
                     Project:
-                    <span class="primary--text display-1">{{name}}</span>
-                    <span class="caption">({{id}})</span>
+                    <span class="primary--text display-1">{{ name }}</span>
+                    <span class="caption">({{ id }})</span>
                 </h1>
-                <h3>Amount of Epics: {{numOfEpics}}</h3>
+                <h3>Amount of Epics: {{ numOfEpics }}</h3>
             </v-col>
             <v-col align="right" col="2">
                 <v-btn @click="openCreateModal()" color="secondary" depressed>
@@ -24,42 +22,21 @@
         <v-divider light></v-divider>
         <v-row class="justify-center">
             <v-col v-if="epicsList" flex class="d-flex flex-wrap justify-center" xl="8">
-                <v-card
-                    class="epicCard"
-                    color="#e8fcff"
-                    v-for="(item, index) in epicsList"
-                    :key="index"
-                >
+                <v-card class="epicCard" color="#e8fcff" v-for="(item, index) in epicsList" :key="index">
                     <v-card-title class="headline">
-                        {{item.name}}
-                        <span class="caption ml-2">({{item.id}})</span>
+                        {{ item.name }}
+                        <span class="caption ml-2">({{ item.id }})</span>
                     </v-card-title>
-                    <v-card-subtitle
-                        class="subtitle black--text font-weight-regular subtitle-1"
-                    >{{item.description}}</v-card-subtitle>
+                    <v-card-subtitle class="subtitle black--text font-weight-regular subtitle-1">{{ item.description }}</v-card-subtitle>
                     <v-card-actions class="action d-flex justify-space-between">
-                        <router-link :to="{name:'Epicpage',params:{id:item.id,name:item.name}}">
+                        <router-link :to="{ name: 'Epicpage', params: { id: item.id, name: item.name } }">
                             <v-btn color="secondary" depressed>View Board</v-btn>
                         </router-link>
                         <div class="btn-wrapper">
-                            <v-btn
-                                @click="editEpic(item.id)"
-                                fab
-                                depressed
-                                outlined
-                                color="grey darken-4"
-                                small
-                            >
+                            <v-btn @click="editEpic(item.id)" fab depressed outlined color="grey darken-4" small>
                                 <v-icon>edit</v-icon>
                             </v-btn>
-                            <v-btn
-                                @click="confirmDeletion(item.id)"
-                                fab
-                                depressed
-                                outlined
-                                color="grey darken-4"
-                                small
-                            >
+                            <v-btn @click="confirmDeletion(item.id)" fab depressed outlined color="grey darken-4" small>
                                 <v-icon>delete</v-icon>
                             </v-btn>
                         </div>
@@ -74,11 +51,7 @@
         <v-dialog v-model="formModal" persistent max-width="550">
             <EpicForm v-if="formModal" :projectId="id" :epic="epicToEdit" @closed="closeForm()"></EpicForm>
         </v-dialog>
-        <ConfirmBox
-            :message="confirmBox.message"
-            v-if="confirmBox.show"
-            @close="getConfirmBoxValue"
-        ></ConfirmBox>
+        <ConfirmBox :message="confirmBox.message" v-if="confirmBox.show" @close="getConfirmBoxValue"></ConfirmBox>
     </v-container>
 </template>
 
@@ -88,6 +61,7 @@ import { EventBus } from '../eventBus';
 import ConfirmBox from '../components/ConfirmBox';
 import store from '../store';
 export default {
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Projectpage',
     components: { EpicForm, ConfirmBox },
     props: ['id', 'name'],

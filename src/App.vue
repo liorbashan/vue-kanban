@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-reserved-component-names -->
 <template>
     <v-app id="inspire">
         <!-- HEADER START -->
@@ -16,12 +17,12 @@
             <v-card>
                 <v-card-title class="headline red lighten-2" primary-title>Error!</v-card-title>
                 <v-card-text class="my-8">
-                    <h3>{{error.message}}</h3>
+                    <h3>{{ error.message }}</h3>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="secondary" depressed @click="error.show=false">Ok</v-btn>
+                    <v-btn color="secondary" depressed @click="error.show = false">Ok</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -29,25 +30,19 @@
             <v-card>
                 <v-card-title class="headline green lighten-2" primary-title>Success!</v-card-title>
                 <v-card-text class="my-8">
-                    <h3>{{success.message}}</h3>
+                    <h3>{{ success.message }}</h3>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="secondary" depressed @click="success.show=false">Ok</v-btn>
+                    <v-btn color="secondary" depressed @click="success.show = false">Ok</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
         <v-overlay z-index="9999" :value="loader.show">
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
-        <v-snackbar
-            :color="snackbar.color"
-            top
-            right
-            :timeout="snackbar.timeout"
-            v-model="snackbar.show"
-        >
+        <v-snackbar :color="snackbar.color" top right :timeout="snackbar.timeout" v-model="snackbar.show">
             {{ snackbar.message }}
             <v-btn text @click="snackbar.show = false">Close</v-btn>
         </v-snackbar>
@@ -61,6 +56,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 export default {
     name: 'App',
+    // eslint-disable-next-line vue/multi-word-component-names, vue/no-reserved-component-names
     components: { Header, Footer },
     data() {
         return {
@@ -100,7 +96,7 @@ export default {
             await this.$store.dispatch('projects/FETCH_ALL_PROJECTS');
             await this.$store.dispatch('users/FETCH_ALL_USERS');
         },
-        initEventHandlers: function() {
+        initEventHandlers: function () {
             EventBus.$on('SHOW_ERROR', (payload) => {
                 // this.error.message = payload;
                 // this.error.show = true;

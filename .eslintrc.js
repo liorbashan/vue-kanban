@@ -3,8 +3,9 @@
 module.exports = {
     root: true,
     parserOptions: {
-        parser: 'babel-eslint',
+        parser: '@babel/eslint-parser',
         ecmaVersion: 6,
+        requireConfigFile: false,
     },
     env: {
         browser: true,
@@ -29,5 +30,18 @@ module.exports = {
         indent: 0,
         'function-paren-newline': ['error', 'never'],
         'no-undef': 0,
+        'vue/multi-word-component-names': [
+            'error',
+            {
+                ignores: [],
+            },
+        ],
+        'vue/no-reserved-component-names': [
+            'error',
+            {
+                disallowVueBuiltInComponents: false,
+                disallowVue3BuiltInComponents: false,
+            },
+        ],
     },
 };

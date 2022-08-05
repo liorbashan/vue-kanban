@@ -2,12 +2,9 @@
     <div>
         <div class="card-wrapper">
             <div class="card-header">
-                <p @click="openTaskDescription()" class="card-title">{{task.title}}</p>
+                <p @click="openTaskDescription()" class="card-title">{{ task.title }}</p>
                 <div class="d-flex">
-                    <div
-                        v-if="task.user"
-                        v-html="avatar(task.user.avatarURL,task.user.firstName,task.user.lastName)"
-                    ></div>
+                    <div v-if="task.user" v-html="avatar(task.user.avatarURL, task.user.firstName, task.user.lastName)"></div>
                 </div>
             </div>
             <div class="card-footer flex mt-4 justify-between items-center">
@@ -29,23 +26,24 @@
                     </v-list>
                 </v-menu>
                 <!-- <span class="caption font-weight-thin">{{task.id}}</span> -->
-                <span
-                    class="task-date font-italic grey--text"
-                >{{task.createdDate | dateFormat(task.createdDate) }}</span>
-                <Chip :color="task.tags.color">{{task.tags.title}}</Chip>
+                <span class="task-date font-italic grey--text">{{ task.createdDate | dateFormat(task.createdDate) }}</span>
+                <Chip :color="task.tags.color">{{ task.tags.title }}</Chip>
             </div>
         </div>
         <v-dialog v-model="formModal" persistent max-width="550">
             <TaskForm v-if="formModal" :epicId="task.epic.id" :task="task" @closed="closeForm()"></TaskForm>
         </v-dialog>
         <v-dialog v-model="taskDescModal" max-width="550">
-            <TaskSummery v-if="taskDescModal" :task="task" @editTask="taskDescModal=false;formModal=true"></TaskSummery>
+            <TaskSummery
+                v-if="taskDescModal"
+                :task="task"
+                @editTask="
+                    taskDescModal = false;
+                    formModal = true;
+                "
+            ></TaskSummery>
         </v-dialog>
-        <ConfirmBox
-            :message="confirmBox.message"
-            v-if="confirmBox.show"
-            @close="getConfirmBoxValue"
-        ></ConfirmBox>
+        <ConfirmBox :message="confirmBox.message" v-if="confirmBox.show" @close="getConfirmBoxValue"></ConfirmBox>
     </div>
 </template>
 <script>
@@ -71,7 +69,7 @@ export default {
     data() {
         return {
             formModal: false,
-            taskDescModal:false,
+            taskDescModal: false,
             confirmBox: {
                 show: false,
                 message: null,
@@ -122,6 +120,7 @@ export default {
         },
         closeForm() {
             if (this.task) {
+                // eslint-disable-next-line vue/no-mutating-props
                 this.task = this.$store.getters['tasks/GET_TASK_BY_ID'](this.task.id);
             }
             this.formModal = false;
@@ -163,7 +162,7 @@ export default {
 .card-wrapper {
     background-color: #fff;
     padding: 12px 8px;
-    box-shadow: 0px 21px 16px -19px #5a5a5a;// 0 8px 6px -6px #5a5a5a;
+    box-shadow: 0px 21px 16px -19px #5a5a5a; // 0 8px 6px -6px #5a5a5a;
     border-radius: 0.25rem;
     padding: 0.25rem 0.75rem 0.75rem 0.75rem;
     color: #4a5568;

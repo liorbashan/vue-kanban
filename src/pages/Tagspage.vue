@@ -13,43 +13,21 @@
         </v-row>
         <v-row class="justify-center">
             <v-col md="8" col="12">
-                <v-data-table
-                    light
-                    dense
-                    hide-default-header
-                    hide-default-footer
-                    :headers="headers"
-                    :items="tagsList"
-                    :items-per-page="10"
-                    class="elevation-1"
-                >
+                <v-data-table light dense hide-default-header hide-default-footer :headers="headers" :items="tagsList" :items-per-page="10" class="elevation-1">
                     <template v-if="tagsList.length > 0" v-slot:body="{ items }">
                         <tbody>
                             <tr v-for="item in items" :key="item.id">
-                                <td>{{item.id}}</td>
-                                <td>{{item.title}}</td>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.title }}</td>
                                 <td>
                                     <div :class="dotColor(item.color)"></div>
                                 </td>
                                 <td>
                                     <v-container class="d-flex justify-between">
-                                        <v-btn
-                                            class="mr-4"
-                                            @click="editTag(item.title)"
-                                            icon
-                                            depressed
-                                            color="info"
-                                            small
-                                        >
+                                        <v-btn class="mr-4" @click="editTag(item.title)" icon depressed color="info" small>
                                             <v-icon>edit</v-icon>
                                         </v-btn>
-                                        <v-btn
-                                            @click="deleteTag(item.id)"
-                                            icon
-                                            depressed
-                                            color="error"
-                                            small
-                                        >
+                                        <v-btn @click="deleteTag(item.id)" icon depressed color="error" small>
                                             <v-icon>delete</v-icon>
                                         </v-btn>
                                     </v-container>
@@ -74,6 +52,7 @@
 import { EventBus } from '@/eventBus';
 import TagForm from '../components/TagForm';
 export default {
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Tagpage',
     components: { TagForm },
     data() {
@@ -98,12 +77,12 @@ export default {
             this.tagToEdit = null;
             this.formModal = true;
         },
-        deleteTag: async function(tagId) {
+        deleteTag: async function (tagId) {
             await this.$store.dispatch('tags/deleteTag', tagId);
             await this.$store.dispatch('tags/getAllTags');
             EventBus.$emit('SHOW_ERROR', 'Tag Deleted');
         },
-        editTag: async function(tagTitle) {
+        editTag: async function (tagTitle) {
             this.tagToEdit = await this.$store.getters['tags/getTag'](tagTitle);
             this.formModal = true;
         },
